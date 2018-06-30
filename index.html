@@ -6,37 +6,24 @@
 	<title>Kamenev Maksim. Novice specialist</title>
 	<link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon">
 	<link rel="stylesheet" href="css/style.css">
+	<script type="text/javascript" src="js/script.js"></script>
 </head>
 
 <body>
-	<header>
-		<a href="#Work" class="scroll">
-			<div class="right_top">Work</div>
-		</a>
-		<a href="#Mail" class="scroll">
-			<div class="left_top">Kamenev Maksim</div>
-		</a>
-		<a href="#About" class="scroll">
-			<div class="left_bottom">About</div>
-		</a>
-		<a href="#Contact" class="scroll">
-			<div class="right_bottom">Contact</div>
-		</a>
-		<div class="center">Hi.</div>
-	</header>
-	<article>
-		<div id="About" class="about">My name is Kamenev Maksim. I am a novice specialist. <a href="#Contact" class="scroll">Contact</a> me if you like. Cheers.</div>
-		<div id="Work" class="work">1) <a href="https://github.com/MegaRoks/SteamMarketsHelper" class="scroll" target="_blank">SteamMarketsHelper</a> - the extension adds a button in the steam inventory to the sites dota2-ru.gamepedia.com, market.dota2.net and opskins.com.<br><br>
-		2) <a href="https://github.com/MegaRoks/SteamMarketsHelper" class="scroll" target="_blank">SteamMarketsHelper</a> - the extension adds a button in the steam inventory to the sites dota2-ru.gamepedia.com, market.dota2.net and opskins.com.
-		<br><br>
-		3) <a href="https://github.com/MegaRoks/SteamMarketsHelper" class="scroll" target="_blank">SteamMarketsHelper</a> - the extension adds a button in the steam inventory to the sites dota2-ru.gamepedia.com, market.dota2.net and opskins.com.
-		<br><br>
-		4) <a href="https://github.com/MegaRoks/SteamMarketsHelper" class="scroll" target="_blank">SteamMarketsHelper</a> - the extension adds a button in the steam inventory to the sites dota2-ru.gamepedia.com, market.dota2.net and opskins.com.</div>
-		<div id="Mail" class="mail">My name is Kamenev Maksim. I am a novice specialist. <a href="#Contact" class="scroll">Contact</a> me if you like. Cheers.</div>
-	</article>
-	<footer>
-		<div id="Contact" class="contact">You can contact me via <a href="#mail" class="scroll" target="_blank">mail</a>, <a href="https://vk.com/mk8705" class="scroll" target="_blank">vk</a>, <a href="http://t.me/MaksKamenev" class="scroll" target="_blank">telegram</a> or <a href="https://www.instagram.com/megaroks/" class="scroll" target="_blank">instagram</a>.</div>
-	</footer>
+	<div class="left_top" onclick="unmask(0)">Home</div>
+	<div class="left_bottom" onclick="unmask(1)">About</div>
+	<div class="right_top" onclick="unmask(2)">Work</div>
+	<div class="right_bottom" onclick="unmask(3)">Contact</div>
+	<div id="blog0" class="home">Hi.</div>
+	<div id="blog1" class="about">
+		My name is Kamenev Maksim. I am a novice specialist. <a class="scroll" onclick="unmask(3)">Contact</a> me if you like. Cheers.
+	</div>
+	<div id="blog2" class="work">
+		1) <a href="https://github.com/MegaRoks/SteamMarketsHelper" class="scroll" target="_blank">SteamMarketsHelper</a> - the extension adds a button in the steam inventory to the sites dota2-ru.gamepedia.com, market.dota2.net and opskins.com.
+	</div>
+	<div id="blog3" class="contact">
+		You can contact me via <a href="#mail" class="scroll" target="_blank">mail</a>, <a href="https://vk.com/mk8705" class="scroll" target="_blank">vk</a>, <a href="http://t.me/MaksKamenev" class="scroll" target="_blank">telegram</a> or <a href="https://www.instagram.com/megaroks/" class="scroll" target="_blank">instagram</a>.
+	</div>
 </body>
 
 </html>
