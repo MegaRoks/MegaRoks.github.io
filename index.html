@@ -10,19 +10,99 @@
 </head>
 
 <body>
-	<div class="left_top" onclick="unmask(0)">Home</div>
-	<div class="left_bottom" onclick="unmask(1)">About</div>
-	<div class="right_top" onclick="unmask(2)">Work</div>
-	<div class="right_bottom" onclick="unmask(3)">Contact</div>
-	<div id="blog0" class="home">Hi.</div>
+	<div class="left_top" onclick="unmask(0)">
+		<a href="#">Home</a>
+	</div>
+	<div class="left_bottom" href="#" onclick="unmask(1)">
+		<a href="#">About</a>
+	</div>
+	<div class="right_top" href="#" onclick="unmask(2)">
+		<a href="#">Work</a>
+	</div>
+	<div class="right_bottom" href="#" onclick="unmask(3)">
+		<a href="#">Contact</a>
+	</div>
+	<div id="blog0" class="home">
+		<div class="container">Hi.</div>
+	</div>
 	<div id="blog1" class="about">
-		My name is Kamenev Maksim. I am a novice specialist. <a class="scroll" onclick="unmask(3)">Contact</a> me if you like. Cheers.
+		<nav class="menu">
+			<ul>
+				<li>
+					<a href="#" onclick="unmaskNav(8)">Hello</a>
+				</li>
+				<li>
+					<a href="#" onclick="unmaskNav(9)">Education</a>
+				</li>
+				<li>
+					<a href="#" onclick="unmaskNav(10)">About</a>
+				</li>
+				<li>
+					<a href="#" onclick="unmaskNav(11)">Progress</a>
+				</li>
+			</ul>
+		</nav>
+		<div id="blog8" class="about_he">
+			1) My name is Kamenev Maksim. I am a novice specialist.
+			<a onclick="unmask(3)">Contact</a> me if you like. Cheers.
+		</div>
+		<div id="blog9" class="about_ed">
+			2) My name is Kamenev Maksim. I am a novice specialist.
+			<a onclick="unmask(3)">Contact</a> me if you like. Cheers.
+		</div>
+		<div id="blog10" class="about_ab">
+			3) My name is Kamenev Maksim. I am a novice specialist.
+			<a onclick="unmask(3)">Contact</a> me if you like. Cheers.
+		</div>
+		<div id="blog11" class="about_pr">
+			4) My name is Kamenev Maksim. I am a novice specialist.
+			<a onclick="unmask(3)">Contact</a> me if you like. Cheers.
+		</div>
 	</div>
 	<div id="blog2" class="work">
-		1) <a href="https://github.com/MegaRoks/SteamMarketsHelper" class="scroll" target="_blank">SteamMarketsHelper</a> - the extension adds a button in the steam inventory to the sites dota2-ru.gamepedia.com, market.dota2.net and opskins.com.
+		<nav class="menu">
+			<ul>
+				<li>
+					<a href="#" onclick="unmaskNav(4)">JavaScript</a>
+				</li>
+				<li>
+					<a href="#" onclick="unmaskNav(5)">C#</a>
+				</li>
+				<li>
+					<a href="#" onclick="unmaskNav(6)">PHP</a>
+				</li>
+				<li>
+					<a href="#" onclick="unmaskNav(7)">ASP.NET</a>
+				</li>
+			</ul>
+		</nav>
+		<div id="blog4" class="pl_js">
+			1)
+			<a href="https://github.com/MegaRoks/SteamMarketsHelper" target="_blank">SteamMarketsHelper</a> - the extension adds a button in the steam inventory to the sites dota2-ru.gamepedia.com, market.dota2.net
+			and opskins.com.
+		</div>
+		<div id="blog5" class="pl_c">
+			2)
+			<a href="https://github.com/MegaRoks/SteamMarketsHelper" target="_blank">SteamMarketsHelper</a> - the extension adds a button in the steam inventory to the sites dota2-ru.gamepedia.com, market.dota2.net
+			and opskins.com.
+		</div>
+		<div id="blog6" class="pl_php">
+			3)
+			<a href="https://github.com/MegaRoks/SteamMarketsHelper" target="_blank">SteamMarketsHelper</a> - the extension adds a button in the steam inventory to the sites dota2-ru.gamepedia.com, market.dota2.net
+			and opskins.com.
+		</div>
+		<div id="blog7" class="pl_asp">
+			4)
+			<a href="https://github.com/MegaRoks/SteamMarketsHelper" target="_blank">SteamMarketsHelper</a> - the extension adds a button in the steam inventory to the sites dota2-ru.gamepedia.com, market.dota2.net
+			and opskins.com.
+		</div>
 	</div>
 	<div id="blog3" class="contact">
-		You can contact me via <a href="#mail" class="scroll" target="_blank">mail</a>, <a href="https://vk.com/mk8705" class="scroll" target="_blank">vk</a>, <a href="http://t.me/MaksKamenev" class="scroll" target="_blank">telegram</a> or <a href="https://www.instagram.com/megaroks/" class="scroll" target="_blank">instagram</a>.
+		You can contact me via
+		<a href="#mail" target="_blank">mail</a>,
+		<a href="https://vk.com/mk8705" target="_blank">vk</a>,
+		<a href="http://t.me/MaksKamenev" target="_blank">telegram</a> or
+		<a href="https://www.instagram.com/megaroks/" target="_blank">instagram</a>.
 	</div>
 </body>
 
