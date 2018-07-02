@@ -18,7 +18,17 @@ function unmask(blog) {
 }
 
 function unmaskNav(blog) {
-	for (var i = 4; i < 12; i++) {
+	for (var i = 4; i < 8; i++) {
+		if (blog === i) {
+			document.getElementById(`blog${i}`).style.display = 'block';
+		} else {
+			document.getElementById(`blog${i}`).style.display = 'none';
+		}
+	}
+}
+
+function unmaskAbo(blog) {
+	for (var i = 8; i < 12; i++) {
 		if (blog === i) {
 			document.getElementById(`blog${i}`).style.display = 'block';
 		} else {
