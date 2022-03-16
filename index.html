@@ -1,148 +1,31 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
 <head>
-	<meta charset="UTF-8">
-	<title>Kamenev Maksim. Novice specialist</title>
-	<link rel="shortcut icon" href="src/images/favicon.png" type="image/png">
-	<link rel="stylesheet" href="css/style.css">
-	<script type="text/javascript" src="js/script.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Maksim Kamenev. Lead Вeveloper</title>
+    <link rel="shortcut icon" href="src/images/favicon.png" type="image/png">
+    <link rel="stylesheet" href="src/css/style.css">
 </head>
-
 <body>
-	<div class="left_top" onclick="unmask(1,1)">
-		<a href="#">Home</a>
-	</div>
-	<div class="left_bottom" href="#" onclick="unmask(1,2)">
-		<a href="#">About</a>
-	</div>
-	<div class="right_top" href="#" onclick="unmask(1,3)">
-		<a href="#">Work</a>
-	</div>
-	<div class="right_bottom" href="#" onclick="unmask(1,4)">
-		<a href="#">Contact</a>
-	</div>
-	<div id="block1" class="home">
-		<div class="container">Hi.</div>
-	</div>
-	<div id="block2" class="about">
-		<nav class="menu">
-			<ul>
-				<li>
-					<a href="#" onclick="unmask(9,9)">About</a>
-				</li>
-				<li>
-					<a href="#" onclick="unmask(9,10)">Education</a>
-				</li>
-				<li>
-					<a href="#" onclick="unmask(9,11)">Skills</a>
-				</li>
-				<li>
-					<a href="#" onclick="unmask(9,12)">Progress</a>
-				</li>
-			</ul>
-		</nav>
-		<div id="block9" class="about_he">
-			Hi, my name is Kamenev Maksim and I'm
-			<span id="age"></span> years old. I am a novice specialist.
-			<a onclick="unmask(1,4)">Contact</a> me if you like. Cheers.
-		</div>
-		<div id="block10" class="about_ed">
-			<ol>
-				<li>
-					University: OmSTU 19
-					<br>Faculty: Information technology and computer systems (former Automation)
-					<br>Department / Direction: Informatics and Computer
-					<br>Engineering
-					<br>Form of training: Full-time department
-					<br>Status: Student (Bachelor)
-				</li>
-				<li>
-					College of Transport and Communications (PKTIK) '15
-					<br>Kazakhstan, Pavlodar, 2012-2015
-					<br>Technician-programmer
-				</li>
-				<li>
-					Konstantinovskaya secondary school 12
-					<br>Konstantinovka, 2001-2012
-				</li>
-			</ol>
-		</div>
-		<div id="block11" class="about_ab">
-			There are works on the section: skills
-		</div>
-		<div id="block12" class="about_pr">
-			There are works on the section: progress
-		</div>
-	</div>
-	<div id="block3" class="work">
-		<nav class="menu">
-			<ul>
-				<li>
-					<a href="#" onclick="unmask(5,5)">JavaScript</a>
-				</li>
-				<li>
-					<a href="#" onclick="unmask(5,6)">C#/ASP.NET</a>
-				</li>
-				<li>
-					<a href="#" onclick="unmask(5,7)">PHP</a>
-				</li>
-				<li>
-					<a href="#" onclick="unmask(5,8)">TypeScript</a>
-				</li>
-			</ul>
-		</nav>
-		<div id="block5" class="pl_js">
-			<ol>
-				<li>
-					<a href="https://github.com/MegaRoks/SteamMarketsHelper" target="_blank">SteamMarketsHelper</a> - the extension adds a button in the steam inventory to the sites dota2-ru.gamepedia.com, market.dota2.net
-					and opskins.com.</li>
-				<li>
-					<a href="https://github.com/MegaRoks/SteamWebApp" target="_blank">SteamWebApp</a> - web application for displaying information about the profile of the steams through the api of my server
-					ProfilesSteamServer.
-				</li>
-			</ol>
-		</div>
-		<div id="block6" class="pl_c">
-			<ol>
-				<li>
-					<a href="https://github.com/MegaRoks/https://github.com/MegaRoks/SteamDesctopApp" target="_blank">SteamDesctopApp</a> - application for displaying information about the profile of the steams through the api of my server
-					<a href="https://github.com/MegaRoks/ProfilesSteamServer" target="_blank">ProfilesSteamServer</a>.
-				</li>
-				<li>
-					<a href="https://github.com/MegaRoks/SteamApp" target="_blank">SteamApp</a> - application for displaying information about the password profile via SteamAPI.
-				</li>
-				<li>
-					<a href="https://github.com/MegaRoks/SchoolApp" target="_blank">SchoolApp</a> - applications for the school, with a schedule of lessons and calls, teachers, students and class numbers.
-				</li>
-				<li>
-					<a href="https://github.com/MegaRoks/BusStationApp" target="_blank">BusStationApp</a> - applications for the bus station, with a schedule of flights, with routes, with bus numbers and
-					stop names.
-				</li>
-			</ol>
-		</div>
-		<div id="block7" class="pl_php">
-			<ol>
-				<li>
-					<a href="https://github.com/MegaRoks/ProfilesSteamServer" target="_blank">ProfilesSteamServer</a> - server for requests information about the steam profile via StamApI.
-				</li>
-			</ol>
-		</div>
-		<div id="block8" class="pl_ts">
-			<ol>
-				<li>
-					<a href="https://github.com/MegaRoks/ChatApp" target="_blank">ChatApp</a> - chat application on Angular CLI.
-				</li>
-			</ol>
-		</div>
-	</div>
-	<div id="block4" class="contact">
-		You can contact me via
-		<a href="mailto:MegaRoks@ya.ru">mail</a>,
-		<a href="https://vk.com/mk8705" target="_blank">vk</a>,
-		<a href="http://t.me/MaksKamenev" target="_blank">telegram</a> or
-		<a href="https://www.instagram.com/megaroks/" target="_blank">instagram</a>.
-	</div>
+    <section class="home">
+        <div>Hi.</div>
+    </section>
+    <section class="about">
+        <div>
+            my name is Maksim Kamenev. I am lead developer.
+            <a href="#contact">Contact</a> me if you like. Cheers.
+        </div>
+    </section>
+    <section class="contact">
+        <div id="contact">
+            you can contact me via
+            <a href="mailto:MegaRoks@ya.ru">mail</a>,
+            <a href="https://t.me/MaxKamenev" target="_blank">telegram</a> or
+            <a href="https://www.linkedin.com/in/maksim-kamenev/" target="_blank">linkedin</a>.
+        </div>
+    </section>
 </body>
-
 </html>
