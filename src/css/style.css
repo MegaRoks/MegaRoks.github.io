@@ -19,7 +19,7 @@ body {
 .home {
     background: #1e1e1e;
     color: #999999;
-    line-height: .8rem;
+    line-height: .9rem;
     padding: 10vh 10vw;
     font-size: 10rem;
     display: flex;
@@ -32,7 +32,7 @@ body {
 .about {
     background: #ffffff;
     color: #000000;
-    line-height: .8em;
+    line-height: .9em;
     padding: 10vh 10vw;
     font-size: 8rem;
     width: 80vw;
@@ -57,7 +57,6 @@ body {
 
 @media screen and (max-width: 480px) {
     .about {
-        line-height: .9em;
         font-size: 4rem;
     }
 }
@@ -65,7 +64,7 @@ body {
 .contact {
     background: #1e1e1e;
     color: #ffffff;
-    line-height: .8em;
+    line-height: .9em;
     padding: 10vh 10vw;
     font-size: 8rem;
     width: 80vw;
@@ -89,7 +88,6 @@ body {
 
 @media screen and (max-width: 480px) {
     .contact {
-        line-height: .9em;
         font-size: 4rem;
     }
 }
@@ -97,7 +95,6 @@ body {
 a {
     text-decoration: none;
     color: #999999;
-    cursor: pointer;
 }
 
 a:hover {
