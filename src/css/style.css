@@ -15,97 +15,88 @@
 }
 
 * {
-    margin: 0;
     padding: 0;
+    margin: 0;
+    border: 0;
+}
+
+*,
+*::before,
+*::after {
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+a,
+a:link,
+a:visited {
+    text-decoration: none;
 }
 
 body {
     font-family: alteHaasGroteskBold, serif;
+}
+
+.wrapper {
+    padding: 10vh 10vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 100vw;
     height: 100vh;
 }
 
 .home {
-    background-color: var(--primary-background-color);
     color: var(--primary-color);
-    line-height: .9rem;
-    padding: 10vh 10vw;
-    font-size: 10rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 80vw;
-    height: 80vh;
+    background-color: var(--primary-background-color);
 }
 
 .about {
-    background-color: var(--secondery-background-color);
     color: var(--secondery-color);
-    line-height: .9em;
-    padding: 10vh 10vw;
-    font-size: 8rem;
-    width: 80vw;
-    height: 80vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-}
-
-@media screen and (max-width: 1200px) {
-    .about {
-        font-size: 6rem;
-    }
-}
-
-@media screen and (max-width: 720px) {
-    .about {
-        font-size: 5rem;
-    }
-}
-
-@media screen and (max-width: 480px) {
-    .about {
-        font-size: 4rem;
-    }
+    background-color: var(--secondery-background-color);
 }
 
 .contact {
-    background-color: var(--primary-background-color);
     color: var(--primary-color);
-    line-height: .9em;
-    padding: 10vh 10vw;
-    font-size: 8rem;
-    width: 80vw;
-    height: 80vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    background-color: var(--primary-background-color);
 }
 
-@media screen and (max-width: 1200px) {
-    .contact {
-        font-size: 6rem;
-    }
-}
-
-@media screen and (max-width: 720px) {
-    .contact {
-        font-size: 5rem;
-    }
-}
-
-@media screen and (max-width: 480px) {
-    .contact {
-        font-size: 4rem;
-    }
-}
-
-a {
+.link {
     text-decoration: none;
     color: var(--link-color);
 }
 
-a:hover {
+.link:hover {
     color: var(--hover-link-color);
+}
+
+.title {
+    line-height: .9rem;
+    font-size: 10rem;
+    text-align: center;
+}
+
+.text {
+    line-height: .9em;
+    font-size: 8rem;
+    text-align: center;
+}
+
+@media screen and (max-width: 1200px) {
+    .text {
+        font-size: 6rem;
+    }
+}
+
+@media screen and (max-width: 720px) {
+    .text {
+        font-size: 5rem;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .text {
+        font-size: 4rem;
+    }
 }
