@@ -1,0 +1,73 @@
+html {
+    font-family: AlteHaasGroteskBold, serif;
+    font-size: var(--main-font-size);
+}
+
+body {
+    overflow-x: hidden;
+}
+
+section {
+    padding: 10vh 10vw;
+    display: grid;
+    justify-items: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+}
+
+section:nth-child(odd) {
+    color: var(--primary-color);
+    background-color: var(--primary-background-color);
+}
+
+section:nth-child(even) {
+    color: var(--secondery-color);
+    background-color: var(--secondery-background-color);
+}
+
+a {
+    color: var(--link-color);
+}
+
+a:hover {
+    color: var(--hover-link-color);
+}
+
+h1 {
+    font-size: 14rem;
+}
+
+h2 {
+    font-size: 10rem;
+}
+
+@media (max-width: 1200px) {
+    h1 {
+        font-size: 12rem;
+    }
+
+    h2 {
+        font-size: 8rem;
+    }
+}
+
+@media (max-width: 720px) {
+    h1 {
+        font-size: 10rem;
+    }
+
+    h2 {
+        font-size: 6rem;
+    }
+}
+
+@media (max-width: 375px) {
+    h1 {
+        font-size: 8rem;
+    }
+
+    h2 {
+        font-size: 4rem;
+    }
+}
