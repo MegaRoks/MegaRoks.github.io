@@ -18,7 +18,25 @@ body {
     display: grid;
     justify-items: center;
     align-items: center;
-    padding: 10vh 10vw;
+    padding: 16rem;
+}
+
+@media (max-width: 1200px) {
+    .page {
+        padding: 12rem;
+    }
+}
+
+@media (max-width: 720px) {
+    .page {
+        padding: 8rem;
+    }
+}
+
+@media (max-width: 375px) {
+    .page {
+        padding: 4rem;
+    }
 }
 
 .page:nth-child(odd) {
@@ -41,6 +59,7 @@ body {
 
 .page__title {
     font-size: 14rem;
+    line-height: 14rem;
 }
 
 .page__text {
@@ -51,6 +70,7 @@ body {
 @media (max-width: 1200px) {
     .page__title {
         font-size: 12rem;
+        line-height: 12rem;
     }
 
     .page__text {
@@ -62,6 +82,7 @@ body {
 @media (max-width: 720px) {
     .page__title {
         font-size: 10rem;
+        line-height: 10rem;
     }
 
     .page__text {
@@ -73,6 +94,7 @@ body {
 @media (max-width: 375px) {
     .page__title {
         font-size: 8rem;
+        line-height: 8rem;
     }
 
     .page__text {

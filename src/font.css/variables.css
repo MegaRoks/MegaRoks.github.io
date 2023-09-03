@@ -6,6 +6,7 @@
     --link-color: hsl(0deg 0% 100%);
     --hover-link-color: hsl(0deg 0% 60%);
 
-    --main-font-size: 10px;
-    --main-line-height: 10px;
+    --main-font-size: 8px;
+    --main-line-height: 8px;
+    --main-padding: 8px;
 }
