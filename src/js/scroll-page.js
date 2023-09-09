@@ -12,7 +12,7 @@ class ScrollPage {
     #listenerOptions = {
         passive: false
     }
-    #scrollTypes = {
+    #listenerTypes = {
         WHEEL: 'wheel',
         TOUCHSTART: 'touchstart',
         TOUCHED: 'touchend',
@@ -28,6 +28,7 @@ class ScrollPage {
         this.#scrollPagesList = scrollPagesList;
         this.#container = container;
         this.#isScrolledIntoView(scrollPagesList);
+        this.#init();
     }
 
     #isScrolledIntoView(scrollPagesList) {
@@ -99,19 +100,19 @@ class ScrollPage {
         this.#scrolled();
     }
 
-    init() {
+    #init() {
         this.#container.addEventListener(
-            this.#scrollTypes.WHEEL,
+            this.#listenerTypes.WHEEL,
             (event) => this.#listenerWheel(event),
             this.#listenerOptions,
         );
         this.#container.addEventListener(
-            this.#scrollTypes.TOUCHSTART,
+            this.#listenerTypes.TOUCHSTART,
             (event) => this.#listenerTouchStart(event),
             this.#listenerOptions,
         );
         this.#container.addEventListener(
-            this.#scrollTypes.TOUCHED,
+            this.#listenerTypes.TOUCHED,
             (event) => this.#listenerTouchFinish(event),
             this.#listenerOptions,
         );
