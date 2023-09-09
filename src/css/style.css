@@ -2,10 +2,11 @@ html {
     font-family: AlteHaasGroteskBold, serif;
     font-size: var(--main-font-size);
     line-height: var(--main-line-height);
+    scroll-behavior: smooth;
 }
 
 body {
-    overflow-x: hidden;
+    overflow: hidden;
 }
 
 .content {
