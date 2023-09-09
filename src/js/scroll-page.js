@@ -5,10 +5,10 @@ class ScrollPage {
 
     #scrollConfig = {
         block: "center",
-        behavior: "smooth"
+        behavior: "smooth",
     }
 
-    #touchStartY
+    #touchStartY;
     #listenerOptions = {
         passive: false
     }
@@ -21,7 +21,7 @@ class ScrollPage {
     #direction;
     #directionConfig = {
         UP: "up",
-        DOWN: "down"
+        DOWN: "down",
     }
 
     constructor(container, scrollPagesList) {
