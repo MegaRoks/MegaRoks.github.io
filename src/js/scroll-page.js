@@ -43,8 +43,8 @@ class ScrollPage {
 
     }
 
-    #getDirectionWheel(event) {
-        const delta = Math.sign(event.deltaY);
+    #getDirectionWheel(deltaY) {
+        const delta = Math.sign(deltaY);
 
         if (delta === 1) {
             this.#direction = this.#directionConfig.UP;
@@ -53,18 +53,16 @@ class ScrollPage {
         }
     }
 
-    #getDirectionTouch(event) {
-        const currentTouchY = event.changedTouches[0].clientY;
-
-        if (currentTouchY < this.#touchStartY - 5) {
+    #getDirectionTouch(finishTouchCoordinatesY) {
+        if (finishTouchCoordinatesY < this.#touchStartY - 5) {
             this.#direction = this.#directionConfig.UP;
-        } else if (currentTouchY > this.#touchStartY + 5) {
+        } else if (finishTouchCoordinatesY > this.#touchStartY + 5) {
             this.#direction = this.#directionConfig.DOWN;
         }
     }
 
     // TODO refactor
-    #scrolled(event) {
+    #scrolled() {
         if (this.#direction === 'up') {
             if (this.#targetScrollPage === 'scroll-page-1') {
                 this.#scrollPagesList[1].scrollIntoView(this.#scrollConfig);
@@ -86,8 +84,8 @@ class ScrollPage {
 
     #listenerWheel(event) {
         event.preventDefault();
-        this.#getDirectionWheel(event);
-        this.#scrolled(event);
+        this.#getDirectionWheel(event.deltaY);
+        this.#scrolled();
     }
 
     #listenerTouchStart(event) {
@@ -97,8 +95,8 @@ class ScrollPage {
 
     #listenerTouchFinish(event) {
         event.preventDefault();
-        this.#getDirectionTouch(event);
-        this.#scrolled(event);
+        this.#getDirectionTouch(event.changedTouches[0].clientY);
+        this.#scrolled();
     }
 
     init() {
