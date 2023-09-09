@@ -1,17 +1,37 @@
 class ScrollPage {
     #container;
     #targetScrollPage;
-    #elements;
-    #direction;
+    #scrollPagesList;
 
-    constructor(container, elements) {
-        this.#elements = elements;
-        this.#container = container;
-        this.#isScrolledIntoView(elements);
+    #scrollConfig = {
+        block: "center",
+        behavior: "smooth"
     }
 
-    #isScrolledIntoView(elements) {
-        elements.forEach((element) => {
+    #touchStartY
+    #listenerOptions = {
+        passive: false
+    }
+    #scrollTypes = {
+        WHEEL: 'wheel',
+        TOUCHSTART: 'touchstart',
+        TOUCHED: 'touchend',
+    }
+
+    #direction;
+    #directionConfig = {
+        UP: "up",
+        DOWN: "down"
+    }
+
+    constructor(container, scrollPagesList) {
+        this.#scrollPagesList = scrollPagesList;
+        this.#container = container;
+        this.#isScrolledIntoView(scrollPagesList);
+    }
+
+    #isScrolledIntoView(scrollPagesList) {
+        scrollPagesList.forEach((element) => {
             const rect = element.getBoundingClientRect();
             const elemTop = rect.top;
             const elemBottom = rect.bottom;
@@ -23,55 +43,79 @@ class ScrollPage {
 
     }
 
-    #getDirection(event) {
+    #getDirectionWheel(event) {
         const delta = Math.sign(event.deltaY);
 
-        this.#direction = delta === 1 ? 'up' : 'down';
+        if (delta === 1) {
+            this.#direction = this.#directionConfig.UP;
+        } else if (delta === -1) {
+            this.#direction = this.#directionConfig.DOWN;
+        }
     }
 
-    #scrolled(event) {
-        event.preventDefault();
+    #getDirectionTouch(event) {
+        const currentTouchY = event.changedTouches[0].clientY;
 
-        // TODO refactor
+        if (currentTouchY < this.#touchStartY - 5) {
+            this.#direction = this.#directionConfig.UP;
+        } else if (currentTouchY > this.#touchStartY + 5) {
+            this.#direction = this.#directionConfig.DOWN;
+        }
+    }
+
+    // TODO refactor
+    #scrolled(event) {
         if (this.#direction === 'up') {
             if (this.#targetScrollPage === 'scroll-page-1') {
-                this.#elements[1].scrollIntoView({
-                    block: "center",
-                    behavior: "smooth"
-                });
-                this.#targetScrollPage = this.#elements[1].getAttributeNode('id').value;
+                this.#scrollPagesList[1].scrollIntoView(this.#scrollConfig);
+                this.#targetScrollPage = this.#scrollPagesList[1].getAttributeNode('id').value;
             } else if (this.#targetScrollPage === 'scroll-page-2') {
-                this.#elements[2].scrollIntoView({
-                    block: "center",
-                    behavior: "smooth"
-                });
-                this.#targetScrollPage = this.#elements[2].getAttributeNode('id').value;
+                this.#scrollPagesList[2].scrollIntoView(this.#scrollConfig);
+                this.#targetScrollPage = this.#scrollPagesList[2].getAttributeNode('id').value;
             }
         } else {
             if (this.#targetScrollPage === 'scroll-page-3') {
-                this.#elements[1].scrollIntoView({
-                    block: "center",
-                    behavior: "smooth"
-                });
-                this.#targetScrollPage = this.#elements[1].getAttributeNode('id').value;
+                this.#scrollPagesList[1].scrollIntoView(this.#scrollConfig);
+                this.#targetScrollPage = this.#scrollPagesList[1].getAttributeNode('id').value;
             } else if (this.#targetScrollPage === 'scroll-page-2') {
-                this.#elements[0].scrollIntoView({
-                    block: "center",
-                    behavior: "smooth"
-                });
-                this.#targetScrollPage = this.#elements[0].getAttributeNode('id').value;
+                this.#scrollPagesList[0].scrollIntoView(this.#scrollConfig);
+                this.#targetScrollPage = this.#scrollPagesList[0].getAttributeNode('id').value;
             }
         }
     }
 
-    #listener(event) {
-        this.#getDirection(event);
+    #listenerWheel(event) {
+        event.preventDefault();
+        this.#getDirectionWheel(event);
+        this.#scrolled(event);
+    }
+
+    #listenerTouchStart(event) {
+        event.preventDefault()
+        this.#touchStartY = event.touches[0].clientY;
+    }
+
+    #listenerTouchFinish(event) {
+        event.preventDefault();
+        this.#getDirectionTouch(event);
         this.#scrolled(event);
     }
 
     init() {
-        this.#container.addEventListener("wheel", (event) => this.#listener(event), {
-            passive: false
-        });
+        this.#container.addEventListener(
+            this.#scrollTypes.WHEEL,
+            (event) => this.#listenerWheel(event),
+            this.#listenerOptions,
+        );
+        this.#container.addEventListener(
+            this.#scrollTypes.TOUCHSTART,
+            (event) => this.#listenerTouchStart(event),
+            this.#listenerOptions,
+        );
+        this.#container.addEventListener(
+            this.#scrollTypes.TOUCHED,
+            (event) => this.#listenerTouchFinish(event),
+            this.#listenerOptions,
+        );
     }
 }
