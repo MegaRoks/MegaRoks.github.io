@@ -7,15 +7,16 @@ class ScrollPage {
         block: "center",
         behavior: "smooth",
     }
+    #scroled = false;
 
     #touchStartY;
     #listenerOptions = {
         passive: false
     }
     #listenerTypes = {
-        WHEEL: 'wheel',
-        TOUCHSTART: 'touchstart',
-        TOUCHED: 'touchend',
+        WHEEL: "wheel",
+        TOUCHSTART: "touchstart",
+        TOUCHED: "touchend",
     }
 
     #direction;
@@ -24,11 +25,16 @@ class ScrollPage {
         DOWN: "down",
     }
 
+
     constructor(container, scrollPagesList) {
         this.#scrollPagesList = scrollPagesList;
         this.#container = container;
         this.#isScrolledIntoView(scrollPagesList);
         this.#init();
+    }
+
+    #debounce() {
+        setTimeout(() => this.#scroled = false, 200);
     }
 
     #isScrolledIntoView(scrollPagesList) {
@@ -38,7 +44,7 @@ class ScrollPage {
             const elemBottom = rect.bottom;
 
             if ((elemTop >= 0) && (elemBottom <= window.innerHeight)) {
-                this.#targetScrollPage = element.getAttributeNode('id').value;
+                this.#targetScrollPage = element.getAttributeNode("id").value;
             }
         })
 
@@ -64,21 +70,39 @@ class ScrollPage {
 
     // TODO refactor
     #scrolled() {
-        if (this.#direction === 'up') {
-            if (this.#targetScrollPage === 'scroll-page-1') {
+        if(Boolean(this.#scroled)) {
+            return;
+        }
+
+        if (this.#direction === "up") {
+            if (this.#targetScrollPage === "scroll-page-1") {
                 this.#scrollPagesList[1].scrollIntoView(this.#scrollConfig);
                 this.#targetScrollPage = this.#scrollPagesList[1].getAttributeNode('id').value;
-            } else if (this.#targetScrollPage === 'scroll-page-2') {
+                this.#scroled = true;
+                this.#debounce();
+            } else if (this.#targetScrollPage === "scroll-page-2") {
                 this.#scrollPagesList[2].scrollIntoView(this.#scrollConfig);
                 this.#targetScrollPage = this.#scrollPagesList[2].getAttributeNode('id').value;
+                this.#scroled = true;
+                this.#debounce();
+            } else {
+                this.#scroled = false;
             }
-        } else {
-            if (this.#targetScrollPage === 'scroll-page-3') {
+        }
+
+        if (this.#direction === "down") {
+            if (this.#targetScrollPage === "scroll-page-3") {
                 this.#scrollPagesList[1].scrollIntoView(this.#scrollConfig);
                 this.#targetScrollPage = this.#scrollPagesList[1].getAttributeNode('id').value;
-            } else if (this.#targetScrollPage === 'scroll-page-2') {
+                 this.#scroled = true;
+                 this.#debounce();
+            } else if (this.#targetScrollPage === "scroll-page-2") {
                 this.#scrollPagesList[0].scrollIntoView(this.#scrollConfig);
                 this.#targetScrollPage = this.#scrollPagesList[0].getAttributeNode('id').value;
+                this.#scroled = true;
+                this.#debounce();
+            } else {
+                this.#scroled = false;
             }
         }
     }
@@ -90,7 +114,7 @@ class ScrollPage {
     }
 
     #listenerTouchStart(event) {
-        event.preventDefault()
+        event.preventDefault();
         this.#touchStartY = event.touches[0].clientY;
     }
 
