@@ -171,7 +171,6 @@ function scrollPage(container, pages) {
     pagesList.map((element, index) => {
         element.setAttribute(DATA_ATTRIBUTE, index.toString());
     });
-    pagesList[0].scrollIntoView(scrollConfig);
 
     container.addEventListener(
         listenerConfig.types.WHEEL,
