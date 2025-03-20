@@ -3,10 +3,16 @@
     --secondary-color: hsl(0deg 0% 0%);
     --primary-background-color: hsl(0deg 0% 13.33%);
     --secondary-background-color: hsl(0deg 0% 100%);
+
     --link-color: hsl(0deg 0% 100%);
     --hover-link-color: hsl(0deg 0% 60%);
 
-    --main-font-size: 8px;
-    --main-line-height: 8px;
-    --main-padding: 8px;
+    --main-font-size: clamp(1rem, 2vw, 1.6rem);
+    --main-line-height: 1.5;
+    --title-font-size: clamp(3rem, 10vw, 14rem);
+    --title-line-height: clamp(3rem, 10vw, 14rem);
+    --text-font-size: clamp(2rem, 7vw, 10rem);
+    --text-line-height: clamp(2rem, 7vw, 10rem);
+
+    --main-padding: clamp(4px, 1vw, 16px);
 }

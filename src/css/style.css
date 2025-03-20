@@ -19,7 +19,7 @@ body {
     display: grid;
     justify-items: center;
     align-items: center;
-    padding: clamp(2rem, 8vw, 16rem);
+    padding: var(--main-padding);
 }
 
 .page:nth-child(odd) {
@@ -43,11 +43,11 @@ body {
 }
 
 .page__title {
-    font-size: clamp(3rem, 10vw, 14rem);
-    line-height: clamp(3rem, 10vw, 14rem);
+    font-size: var(--title-font-size);
+    line-height: var(--title-line-height);
 }
 
 .page__text {
-    font-size: clamp(2rem, 7vw, 10rem);
-    line-height: clamp(2rem, 7vw, 10rem);
+    font-size: var(--text-font-size);
+    line-height: var(--text-line-height);
 }
