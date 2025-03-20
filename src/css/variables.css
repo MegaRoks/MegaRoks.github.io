@@ -1,8 +1,8 @@
 :root {
     --primary-color: hsl(0deg 0% 60%);
-    --secondery-color: hsl(0deg 0% 0%);
+    --secondary-color: hsl(0deg 0% 0%);
     --primary-background-color: hsl(0deg 0% 13.33%);
-    --secondery-background-color: hsl(0deg 0% 100%);
+    --secondary-background-color: hsl(0deg 0% 100%);
     --link-color: hsl(0deg 0% 100%);
     --hover-link-color: hsl(0deg 0% 60%);
 

@@ -8,7 +8,7 @@ const listenerConfig = {
     types: {
         WHEEL: 'wheel',
         TOUCHSTART: 'touchstart',
-        TOUCHED: 'touchend',
+        TOUCHEND: 'touchend',
         RESIZE: 'resize',
     },
     options: {
@@ -103,27 +103,32 @@ function scroll(direction, pagesList) {
  * @returns {Function}
  */
 function debounce(callee, timeoutMs) {
-    return function perform(...args) {
-        const previousCall = this.lastCall;
+    let lastCall = 0;
+    let isFirstCall = false;
+    let lastCallTimer;
 
-        if (!this.isFirstCall) {
+    return function (...args) {
+        const previousCall = lastCall;
+        lastCall = Date.now();
+
+        if (!isFirstCall) {
             callee(...args);
         }
 
-        this.lastCall = Date.now();
-
-        if (previousCall && this.lastCall - previousCall <= timeoutMs) {
-            this.isFirstCall = true;
-            clearTimeout(this.lastCallTimer);
+        if (previousCall && lastCall - previousCall <= timeoutMs) {
+            isFirstCall = true;
+            clearTimeout(lastCallTimer);
         }
 
-        this.lastCallTimer = setTimeout(() => (this.isFirstCall = false), timeoutMs);
+        lastCallTimer = setTimeout(() => {
+            isFirstCall = false;
+        }, timeoutMs);
     };
 }
 
 /**
  * @param event {WheelEvent}
- * @param pagesList {HTMLElement[]}
+ * @param pagesList {Element[]}
  * @returns {void}
  */
 function listenerWheel(event, pagesList) {
@@ -136,7 +141,6 @@ function listenerWheel(event, pagesList) {
  * @returns {void}
  */
 function listenerTouchStart(event) {
-    event.preventDefault();
     getDirectionTouch(event.touches[0].clientY);
 }
 
@@ -156,7 +160,6 @@ function listenerTouchFinish(event, pagesList) {
  * @returns {void}
  */
 function listenerResize(event, pagesList) {
-    event.preventDefault();
     pagesList[0].scrollIntoView(scrollConfig);
 }
 
@@ -165,16 +168,18 @@ function listenerResize(event, pagesList) {
  * @param pages {HTMLCollection}
  * @returns {void}
  */
-function scrollPage(container, pages) {
+export function scrollPage(container, pages) {
     const pagesList = Array.from(pages);
 
     pagesList.map((element, index) => {
         element.setAttribute(DATA_ATTRIBUTE, index.toString());
     });
 
+    const debouncedWheel = debounce(listenerWheel, 50);
+
     container.addEventListener(
         listenerConfig.types.WHEEL,
-        (event) => debounce(listenerWheel, 50)(event, pagesList),
+        (event) => debouncedWheel(event, pagesList),
         listenerConfig.options,
     );
     container.addEventListener(
@@ -183,7 +188,7 @@ function scrollPage(container, pages) {
         listenerConfig.options,
     );
     container.addEventListener(
-        listenerConfig.types.TOUCHED,
+        listenerConfig.types.TOUCHEND,
         (event) => listenerTouchFinish(event, pagesList),
         listenerConfig.options,
     );
