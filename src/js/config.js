@@ -1,5 +1,5 @@
 /**
- * @typedef {'up' | 'down' | 'stop'} DirectionType
+ * @typedef {'up' | 'down'} DirectionType
  */
 
 /**
@@ -8,7 +8,6 @@
 export const directionTypes = {
     UP: 'up',
     DOWN: 'down',
-    STOP: 'stop'
 };
 
 /** @type {ScrollIntoViewOptions} */
@@ -18,7 +17,15 @@ export const scrollConfig = {
 };
 
 
-/** @type {keyof HTMLElementEventMap} */
+/**
+ * @typedef {Object} ListenerTypes
+ * @property {keyof HTMLElementEventMap} wheel
+ * @property {keyof HTMLElementEventMap} touchstart
+ * @property {keyof HTMLElementEventMap} touchend
+ * @property {keyof HTMLElementEventMap} resize
+ */
+
+/** @type {ListenerTypes} */
 export const listenerTypes = {
     wheel: 'wheel',
     touchstart: 'touchstart',
@@ -26,9 +33,12 @@ export const listenerTypes = {
     resize: 'resize',
 };
 
-/** @type {AddEventListenerOptions} */
+/**
+ * @typedef {Object} ListenerConfig
+ * @property {boolean} passive
+ */
+
+/** @type {ListenerConfig} */
 export const listenerConfig = {
     passive: false,
-    capture: true,
-    once: false,
 };

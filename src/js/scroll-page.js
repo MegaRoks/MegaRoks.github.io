@@ -35,13 +35,6 @@ function getDirectionWheel(deltaY) {
     const isScrollingDown = delta === 1;
     const isScrollingUp = delta === -1;
 
-    const atTop = window.scrollY === 0;
-    const atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight;
-
-    if ((atTop && isScrollingUp) || (atBottom && isScrollingDown)) {
-        return directionTypes.STOP;
-    }
-
     if (isScrollingDown) {
         return directionTypes.UP;
     }
@@ -49,8 +42,6 @@ function getDirectionWheel(deltaY) {
     if (isScrollingUp) {
         return directionTypes.DOWN;
     }
-
-    return directionTypes.STOP;
 }
 
 /**
@@ -68,22 +59,15 @@ function getDirectionTouch(lastTouchY) {
     const isSwipingUp = lastTouchY < startTouchY - 5;
     const isSwipingDown = lastTouchY > startTouchY + 5;
 
-    const atTop = window.scrollY === 0;
-    const atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight;
-
-    let direction;
-
-    if ((atTop && isSwipingDown) || (atBottom && isSwipingUp)) {
-        direction = directionTypes.STOP;
-    } else if (isSwipingUp) {
-        direction = directionTypes.UP;
-    } else if (isSwipingDown) {
-        direction = directionTypes.DOWN;
-    }
-
     this.lastTouchY = lastTouchY;
 
-    return direction;
+    if (isSwipingUp) {
+       return  directionTypes.UP;
+    }
+
+    if (isSwipingDown) {
+        return  directionTypes.DOWN;
+    }
 }
 
 /**
@@ -92,11 +76,11 @@ function getDirectionTouch(lastTouchY) {
  * @returns {void}
  */
 function scroll(direction, pagesList) {
-    if (direction === directionTypes.STOP) {
-        return;
-    }
+    console.log('direction', direction);
 
     const pageId = getTargetScrollPageId(pagesList);
+
+    console.log('pageId', pageId);
 
     if (direction === directionTypes.UP) {
         const nextPageId = Number(pageId) + 1;
