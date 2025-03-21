@@ -1,22 +1,5 @@
-const DATA_ATTRIBUTE_PAGE_ID = 'data-page-id';
-const SEARCH_PARAM_PAGE = 'page';
-const directionTypes = {
-    UP: 'up',
-    DOWN: 'down',
-    STOP: 'stop'
-};
-const scrollConfig = { block: 'center', behavior: 'smooth' };
-const listenerConfig = {
-    types: {
-        WHEEL: 'wheel',
-        TOUCHSTART: 'touchstart',
-        TOUCHEND: 'touchend',
-        RESIZE: 'resize',
-    },
-    options: {
-        passive: false,
-    },
-};
+import { directionTypes, scrollConfig,listenerTypes, listenerConfig } from './config.js';
+import { DATA_ATTRIBUTE_PAGE_ID, SEARCH_PARAM_PAGE } from './constants.js';
 
 /**
  * @param pagesList {Element[]}
@@ -49,24 +32,25 @@ function getTargetScrollPageId(pagesList) {
 function getDirectionWheel(deltaY) {
     const delta = Math.sign(deltaY);
 
+    const isScrollingDown = delta === 1;
+    const isScrollingUp = delta === -1;
+
     const atTop = window.scrollY === 0;
     const atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight;
 
-    if (atTop && delta === -1) {
+    if ((atTop && isScrollingUp) || (atBottom && isScrollingDown)) {
         return directionTypes.STOP;
     }
 
-    if (atBottom && delta === 1) {
-        return directionTypes.STOP;
-    }
-
-    if (delta === 1) {
+    if (isScrollingDown) {
         return directionTypes.UP;
     }
 
-    if (delta === -1) {
+    if (isScrollingUp) {
         return directionTypes.DOWN;
     }
+
+    return directionTypes.STOP;
 }
 
 /**
@@ -76,24 +60,30 @@ function getDirectionWheel(deltaY) {
 function getDirectionTouch(lastTouchY) {
     const startTouchY = this.lastTouchY;
 
-    if (!startTouchY) {
+    if (startTouchY === undefined) {
         this.lastTouchY = lastTouchY;
-
         return undefined;
     }
+
+    const isSwipingUp = lastTouchY < startTouchY - 5;
+    const isSwipingDown = lastTouchY > startTouchY + 5;
 
     const atTop = window.scrollY === 0;
     const atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight;
 
-    if (atTop || atBottom) {
-        return directionTypes.STOP;
+    let direction;
+
+    if ((atTop && isSwipingDown) || (atBottom && isSwipingUp)) {
+        direction = directionTypes.STOP;
+    } else if (isSwipingUp) {
+        direction = directionTypes.UP;
+    } else if (isSwipingDown) {
+        direction = directionTypes.DOWN;
     }
 
-    if (lastTouchY < startTouchY - 5) {
-        return directionTypes.UP;
-    } else if (lastTouchY > startTouchY + 5) {
-        return directionTypes.DOWN;
-    }
+    this.lastTouchY = lastTouchY;
+
+    return direction;
 }
 
 /**
@@ -214,23 +204,23 @@ export function scrollPage(container, pages) {
     const debouncedWheel = debounce(listenerWheel, 50);
 
     container.addEventListener(
-        listenerConfig.types.WHEEL,
+        listenerTypes.wheel,
         (event) => debouncedWheel(event, pagesList),
-        listenerConfig.options,
+        listenerConfig,
     );
     container.addEventListener(
-        listenerConfig.types.TOUCHSTART,
+        listenerTypes.touchstart,
         (event) => listenerTouchStart(event),
-        listenerConfig.options,
+        listenerConfig,
     );
     container.addEventListener(
-        listenerConfig.types.TOUCHEND,
+        listenerTypes.touchend,
         (event) => listenerTouchFinish(event, pagesList),
-        listenerConfig.options,
+        listenerConfig,
     );
     window.addEventListener(
-        listenerConfig.types.RESIZE,
+        listenerTypes.resize,
         (event) => listenerResize(event, pagesList),
-        listenerConfig.options,
+        listenerConfig,
     );
 }
