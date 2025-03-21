@@ -6,23 +6,17 @@ import { DATA_ATTRIBUTE_PAGE_ID } from './constants.js';
  * @returns {Number}
  */
 function getTargetScrollPageId(pagesList) {
-    let pageId = 0;
-
-    pagesList.forEach((element) => {
+    const element = pagesList.find((element) => {
         const rect = element.getBoundingClientRect();
         const elemTop = rect.top;
         const elemBottom = rect.bottom;
 
         if (elemTop >= 0 && elemBottom <= window.innerHeight) {
-            const attributePageId = element.getAttribute(DATA_ATTRIBUTE_PAGE_ID);
-
-            if (attributePageId !== null && !isNaN(Number(attributePageId))) {
-                pageId = Number(attributePageId);
-            }
+            return element;
         }
     });
 
-    return pageId;
+    return Number(element.getAttribute(DATA_ATTRIBUTE_PAGE_ID)) || 0;
 }
 
 /**
@@ -46,7 +40,7 @@ function getDirectionWheel(deltaY) {
 
 /**
  * @param lastTouchY {Number}
- * @returns {directionTypes || undefined}
+ * @returns {directionTypes}
  */
 function getDirectionTouch(lastTouchY) {
     const startTouchY = this.lastTouchY;
@@ -76,11 +70,7 @@ function getDirectionTouch(lastTouchY) {
  * @returns {void}
  */
 function scroll(direction, pagesList) {
-    console.log('direction', direction);
-
     const pageId = getTargetScrollPageId(pagesList);
-
-    console.log('pageId', pageId);
 
     if (direction === directionTypes.UP) {
         const nextPageId = Number(pageId) + 1;
