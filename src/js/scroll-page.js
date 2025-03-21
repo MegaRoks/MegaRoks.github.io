@@ -110,6 +110,7 @@ function scroll(direction, pagesList) {
         if (nextPageId <= pagesList.length) {
             searchParams.set(SEARCH_PARAM_PAGE, nextPageId.toString());
             pagesList[nextPageId].scrollIntoView(scrollConfig);
+            window.history.replaceState(null, '', `?${searchParams.toString()}`);
         }
     }
 
@@ -119,6 +120,7 @@ function scroll(direction, pagesList) {
         if (previousPageId >= 0) {
             searchParams.set(SEARCH_PARAM_PAGE, previousPageId.toString());
             pagesList[previousPageId].scrollIntoView(scrollConfig);
+            window.history.replaceState(null, '', `?${searchParams.toString()}`);
         }
     }
 }
