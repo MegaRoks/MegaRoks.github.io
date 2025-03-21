@@ -1,7 +1,9 @@
-const DATA_ATTRIBUTE = 'data-page-id';
+const DATA_ATTRIBUTE_PAGE_ID = 'data-page-id';
+const SEARCH_PARAM_PAGE = 'page';
 const directionTypes = {
     UP: 'up',
     DOWN: 'down',
+    STOP: 'stop'
 };
 const scrollConfig = { block: 'center', behavior: 'smooth' };
 const listenerConfig = {
@@ -18,18 +20,26 @@ const listenerConfig = {
 
 /**
  * @param pagesList {Element[]}
- * @returns {Element || undefined}
+ * @returns {Number}
  */
-function isScrolledIntoView(pagesList) {
-    return pagesList.find((element) => {
+function getTargetScrollPageId(pagesList) {
+    let pageId = 0;
+
+    pagesList.forEach((element) => {
         const rect = element.getBoundingClientRect();
         const elemTop = rect.top;
         const elemBottom = rect.bottom;
 
         if (elemTop >= 0 && elemBottom <= window.innerHeight) {
-            return element;
+            const attributePageId = element.getAttribute(DATA_ATTRIBUTE_PAGE_ID);
+
+            if (attributePageId !== null && !isNaN(Number(attributePageId))) {
+                pageId = Number(attributePageId);
+            }
         }
     });
+
+    return pageId;
 }
 
 /**
@@ -39,9 +49,22 @@ function isScrolledIntoView(pagesList) {
 function getDirectionWheel(deltaY) {
     const delta = Math.sign(deltaY);
 
+    const atTop = window.scrollY === 0;
+    const atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight;
+
+    if (atTop && delta === -1) {
+        return directionTypes.STOP;
+    }
+
+    if (atBottom && delta === 1) {
+        return directionTypes.STOP;
+    }
+
     if (delta === 1) {
         return directionTypes.UP;
-    } else if (delta === -1) {
+    }
+
+    if (delta === -1) {
         return directionTypes.DOWN;
     }
 }
@@ -59,6 +82,13 @@ function getDirectionTouch(lastTouchY) {
         return undefined;
     }
 
+    const atTop = window.scrollY === 0;
+    const atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight;
+
+    if (atTop || atBottom) {
+        return directionTypes.STOP;
+    }
+
     if (lastTouchY < startTouchY - 5) {
         return directionTypes.UP;
     } else if (lastTouchY > startTouchY + 5) {
@@ -72,18 +102,23 @@ function getDirectionTouch(lastTouchY) {
  * @returns {void}
  */
 function scroll(direction, pagesList) {
-    const targetScrollPage = isScrolledIntoView(pagesList);
-
-    if (!targetScrollPage) {
+    if (direction === directionTypes.STOP) {
         return;
     }
 
-    const pageId = targetScrollPage.getAttribute(DATA_ATTRIBUTE);
+    const pageId = getTargetScrollPageId(pagesList);
+
+    const searchParams = new URLSearchParams(window.location.search);
+
+    if (searchParams.has(SEARCH_PARAM_PAGE)) {
+        pagesList[searchParams.get(SEARCH_PARAM_PAGE)].scrollIntoView(scrollConfig);
+    }
 
     if (direction === directionTypes.UP) {
         const nextPageId = Number(pageId) + 1;
 
-        if (nextPageId < pagesList.length) {
+        if (nextPageId <= pagesList.length) {
+            searchParams.set(SEARCH_PARAM_PAGE, nextPageId.toString());
             pagesList[nextPageId].scrollIntoView(scrollConfig);
         }
     }
@@ -92,6 +127,7 @@ function scroll(direction, pagesList) {
         const previousPageId = Number(pageId) - 1;
 
         if (previousPageId >= 0) {
+            searchParams.set(SEARCH_PARAM_PAGE, previousPageId.toString());
             pagesList[previousPageId].scrollIntoView(scrollConfig);
         }
     }
@@ -172,7 +208,7 @@ export function scrollPage(container, pages) {
     const pagesList = Array.from(pages);
 
     pagesList.map((element, index) => {
-        element.setAttribute(DATA_ATTRIBUTE, index.toString());
+        element.setAttribute(DATA_ATTRIBUTE_PAGE_ID, index.toString());
     });
 
     const debouncedWheel = debounce(listenerWheel, 50);

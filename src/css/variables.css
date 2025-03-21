@@ -7,12 +7,12 @@
     --link-color: hsl(0deg 0% 100%);
     --hover-link-color: hsl(0deg 0% 60%);
 
-    --main-font-size: clamp(1rem, 2vw, 1.6rem);
-    --main-line-height: 1.5;
-    --title-font-size: clamp(3rem, 10vw, 14rem);
-    --title-line-height: clamp(3rem, 10vw, 14rem);
-    --text-font-size: clamp(2rem, 7vw, 10rem);
-    --text-line-height: clamp(2rem, 7vw, 10rem);
+    --main-font-size: clamp(8px, 1.5vw, 14px);
+    --main-line-height: clamp(8px, 1.5vw, 14px);
+    --title-font-size: clamp(8rem, 4.5vw, 14rem);
+    --title-line-height: clamp(8rem, 4.5vw, 14rem);
+    --text-font-size: clamp(4rem, 3vw, 10rem);
+    --text-line-height: clamp(4rem, 3vw, 10rem);
 
-    --main-padding: clamp(4px, 1vw, 16px);
+    --main-padding: clamp(4rem, 5vw, 16rem);
 }
