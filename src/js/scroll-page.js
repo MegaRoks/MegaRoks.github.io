@@ -1,5 +1,5 @@
 import { directionTypes, scrollConfig,listenerTypes, listenerConfig } from './config.js';
-import { DATA_ATTRIBUTE_PAGE_ID, SEARCH_PARAM_PAGE } from './constants.js';
+import { DATA_ATTRIBUTE_PAGE_ID } from './constants.js';
 
 /**
  * @param pagesList {Element[]}
@@ -98,29 +98,19 @@ function scroll(direction, pagesList) {
 
     const pageId = getTargetScrollPageId(pagesList);
 
-    const searchParams = new URLSearchParams(window.location.search);
-
-    if (searchParams.has(SEARCH_PARAM_PAGE)) {
-        pagesList[searchParams.get(SEARCH_PARAM_PAGE)].scrollIntoView(scrollConfig);
-    }
-
     if (direction === directionTypes.UP) {
         const nextPageId = Number(pageId) + 1;
 
-        if (nextPageId <= pagesList.length) {
-            searchParams.set(SEARCH_PARAM_PAGE, nextPageId.toString());
+        if (nextPageId < pagesList.length) {
             pagesList[nextPageId].scrollIntoView(scrollConfig);
-            window.history.replaceState(null, '', `?${searchParams.toString()}`);
         }
     }
 
     if (direction === directionTypes.DOWN) {
         const previousPageId = Number(pageId) - 1;
 
-        if (previousPageId >= 0) {
-            searchParams.set(SEARCH_PARAM_PAGE, previousPageId.toString());
+        if (previousPageId > -1) {
             pagesList[previousPageId].scrollIntoView(scrollConfig);
-            window.history.replaceState(null, '', `?${searchParams.toString()}`);
         }
     }
 }
