@@ -191,7 +191,6 @@ export function scrollPage(pages) {
 
     const debouncedWheel = debounce(listenerWheel, 50);
 
-
     window.addEventListener(
         listenerTypes.wheel,
         (event) => debouncedWheel(event, pagesList),
