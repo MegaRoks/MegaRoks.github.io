@@ -53,11 +53,11 @@ function getDirectionTouch(lastTouchY) {
     this.lastTouchY = lastTouchY;
 
     if (isSwipingUp) {
-       return  directionTypes.UP;
+        return directionTypes.UP;
     }
 
     if (isSwipingDown) {
-        return  directionTypes.DOWN;
+        return directionTypes.DOWN;
     }
 }
 
