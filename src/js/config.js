@@ -19,10 +19,11 @@ export const scrollConfig = {
 
 /**
  * @typedef {Object} ListenerTypes
- * @property {keyof HTMLElementEventMap} wheel
- * @property {keyof HTMLElementEventMap} touchstart
- * @property {keyof HTMLElementEventMap} touchend
- * @property {keyof HTMLElementEventMap} resize
+ * @property {keyof WindowEventMap} wheel
+ * @property {keyof WindowEventMap} touchstart
+ * @property {keyof WindowEventMap} touchend
+ * @property {keyof WindowEventMap} keydown
+ * @property {keyof WindowEventMap} resize
  */
 
 /** @type {ListenerTypes} */
@@ -30,6 +31,7 @@ export const listenerTypes = {
     wheel: 'wheel',
     touchstart: 'touchstart',
     touchend: 'touchend',
+    keydown: 'keydown',
     resize: 'resize',
 };
 

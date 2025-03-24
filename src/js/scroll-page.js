@@ -3,10 +3,10 @@ import { DATA_ATTRIBUTE_PAGE_ID } from './constants.js';
 
 /**
  * @param pagesList {Element[]}
- * @returns {Number}
+ * @returns {Element | undefined}
  */
-function getTargetScrollPageId(pagesList) {
-    const element = pagesList.find((element) => {
+function getElementInViewport(pagesList) {
+    return pagesList.find((element) => {
         const rect = element.getBoundingClientRect();
         const elemTop = rect.top;
         const elemBottom = rect.bottom;
@@ -15,16 +15,14 @@ function getTargetScrollPageId(pagesList) {
             return element;
         }
     });
-
-    return Number(element.getAttribute(DATA_ATTRIBUTE_PAGE_ID)) || 0;
 }
 
 /**
- * @param deltaY {Number}
+ * @param lastDeltaY {Number}
  * @returns {directionTypes}
  */
-function getDirectionWheel(deltaY) {
-    const delta = Math.sign(deltaY);
+function getDirectionWheel(lastDeltaY) {
+    const delta = Math.sign(lastDeltaY);
 
     const isScrollingDown = delta === 1;
     const isScrollingUp = delta === -1;
@@ -47,7 +45,6 @@ function getDirectionTouch(lastTouchY) {
 
     if (startTouchY === undefined) {
         this.lastTouchY = lastTouchY;
-        return undefined;
     }
 
     const isSwipingUp = lastTouchY < startTouchY - 5;
@@ -70,7 +67,13 @@ function getDirectionTouch(lastTouchY) {
  * @returns {void}
  */
 function scroll(direction, pagesList) {
-    const pageId = getTargetScrollPageId(pagesList);
+    const elementInViewport = getElementInViewport(pagesList);
+
+    if (!elementInViewport) {
+        return
+    }
+
+    const pageId = Number(elementInViewport.getAttribute(DATA_ATTRIBUTE_PAGE_ID)) || 0;
 
     if (direction === directionTypes.UP) {
         const nextPageId = Number(pageId) + 1;
@@ -133,6 +136,7 @@ function listenerWheel(event, pagesList) {
  * @returns {void}
  */
 function listenerTouchStart(event) {
+    event.preventDefault();
     getDirectionTouch(event.touches[0].clientY);
 }
 
@@ -147,20 +151,38 @@ function listenerTouchFinish(event, pagesList) {
 }
 
 /**
- * @param event {Event}
+ * @param event {UIEvent}
  * @param pagesList {Element[]}
  * @returns {void}
  */
 function listenerResize(event, pagesList) {
-    pagesList[0].scrollIntoView(scrollConfig);
+    const elementInViewport = getElementInViewport(pagesList);
+
+    if (!elementInViewport) {
+        return
+    }
+
+    elementInViewport.scrollIntoView(scrollConfig);
 }
 
 /**
- * @param container {HTMLElement}
+ * @param event {KeyboardEvent}
+ * @param pagesList {Element[]}
+ * @returns {void}
+ */
+function listenerKeyDown(event, pagesList) {
+    if (event.key === 'ArrowDown') {
+        scroll(directionTypes.UP, pagesList);
+    } else if (event.key === 'ArrowUp') {
+        scroll(directionTypes.DOWN, pagesList);
+    }
+}
+
+/**
  * @param pages {HTMLCollection}
  * @returns {void}
  */
-export function scrollPage(container, pages) {
+export function scrollPage(pages) {
     const pagesList = Array.from(pages);
 
     pagesList.map((element, index) => {
@@ -169,19 +191,25 @@ export function scrollPage(container, pages) {
 
     const debouncedWheel = debounce(listenerWheel, 50);
 
-    container.addEventListener(
+
+    window.addEventListener(
         listenerTypes.wheel,
         (event) => debouncedWheel(event, pagesList),
         listenerConfig,
     );
-    container.addEventListener(
+    window.addEventListener(
         listenerTypes.touchstart,
         (event) => listenerTouchStart(event),
         listenerConfig,
     );
-    container.addEventListener(
+    window.addEventListener(
         listenerTypes.touchend,
         (event) => listenerTouchFinish(event, pagesList),
+        listenerConfig,
+    );
+    window.addEventListener(
+        listenerTypes.keydown,
+        (event) => listenerKeyDown(event, pagesList),
         listenerConfig,
     );
     window.addEventListener(
