@@ -1,6 +1,6 @@
 import { directionTypes, scrollConfig, listenerTypes, listenerConfig, keyTypes } from './config.js';
 import { createPageYOffsetStore, createPagesListStore } from './store.js';
-import { getDirection, getElementInViewport } from './utils.js';
+import {debounce, getDirection, getElementInViewport} from './utils.js';
 
 const pageYOffsetStore = createPageYOffsetStore(0);
 const pagesListStore = createPagesListStore([]);
@@ -41,8 +41,6 @@ function scroll(direction) {
  * @returns {void}
  */
 function listenerWheel(event) {
-    event.preventDefault();
-
     const direction = getDirection(event.deltaY);
 
     scroll(direction);
@@ -106,7 +104,9 @@ function listenerKeyDown(event) {
 export function scrollPage(pagesList) {
     pagesListStore.set(pagesList);
 
-    window.addEventListener(listenerTypes.wheel, listenerWheel, listenerConfig);
+    const debounceListenerWheel = debounce(listenerWheel, 50);
+
+    window.addEventListener(listenerTypes.wheel, debounceListenerWheel, listenerConfig);
     window.addEventListener(listenerTypes.touchstart, listenerTouchStart, listenerConfig);
     window.addEventListener(listenerTypes.touchend, listenerTouchFinish, listenerConfig);
     window.addEventListener(listenerTypes.keydown, listenerKeyDown, listenerConfig);
