@@ -1,5 +1,5 @@
 import { scrollPage } from './scroll-page.js';
 
-const main = document.querySelector("#scroll-id");
+const pagesList = Array.from(document.querySelectorAll("#scroll-id .page"));
 
-scrollPage(main.children);
+scrollPage(pagesList);

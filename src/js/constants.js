@@ -1,1 +1,0 @@
-export const DATA_ATTRIBUTE_PAGE_ID = 'data-page-id';

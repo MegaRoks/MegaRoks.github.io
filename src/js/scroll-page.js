@@ -1,134 +1,51 @@
-import { directionTypes, scrollConfig,listenerTypes, listenerConfig } from './config.js';
-import { DATA_ATTRIBUTE_PAGE_ID } from './constants.js';
+import { directionTypes, scrollConfig, listenerTypes, listenerConfig, keyTypes } from './config.js';
+import { createPageYOffsetStore, createPagesListStore } from './store.js';
+import { getDirection, getElementInViewport } from './utils.js';
 
-/**
- * @param pagesList {Element[]}
- * @returns {Element | undefined}
- */
-function getElementInViewport(pagesList) {
-    return pagesList.find((element) => {
-        const rect = element.getBoundingClientRect();
-        const elemTop = rect.top;
-        const elemBottom = rect.bottom;
-
-        if (elemTop >= 0 && elemBottom <= window.innerHeight) {
-            return element;
-        }
-    });
-}
-
-/**
- * @param lastDeltaY {Number}
- * @returns {directionTypes}
- */
-function getDirectionWheel(lastDeltaY) {
-    const delta = Math.sign(lastDeltaY);
-
-    const isScrollingDown = delta === 1;
-    const isScrollingUp = delta === -1;
-
-    if (isScrollingDown) {
-        return directionTypes.UP;
-    }
-
-    if (isScrollingUp) {
-        return directionTypes.DOWN;
-    }
-}
-
-/**
- * @param lastTouchY {Number}
- * @returns {directionTypes}
- */
-function getDirectionTouch(lastTouchY) {
-    const startTouchY = this.lastTouchY;
-
-    if (startTouchY === undefined) {
-        this.lastTouchY = lastTouchY;
-    }
-
-    const isSwipingUp = lastTouchY < startTouchY - 5;
-    const isSwipingDown = lastTouchY > startTouchY + 5;
-
-    this.lastTouchY = lastTouchY;
-
-    if (isSwipingUp) {
-        return directionTypes.UP;
-    }
-
-    if (isSwipingDown) {
-        return directionTypes.DOWN;
-    }
-}
+const pageYOffsetStore = createPageYOffsetStore(0);
+const pagesListStore = createPagesListStore([]);
 
 /**
  * @param direction {directionTypes}
- * @param pagesList {Element[]}
  * @returns {void}
  */
-function scroll(direction, pagesList) {
+function scroll(direction) {
+    const pagesList = pagesListStore.get();
     const elementInViewport = getElementInViewport(pagesList);
 
     if (!elementInViewport) {
         return
     }
 
-    const pageId = Number(elementInViewport.getAttribute(DATA_ATTRIBUTE_PAGE_ID)) || 0;
+    const pageId = pagesList.indexOf(elementInViewport);
 
-    if (direction === directionTypes.UP) {
-        const nextPageId = Number(pageId) + 1;
+    if (direction === directionTypes.up) {
+        const nextPageId = pageId - 1;
 
-        if (nextPageId < pagesList.length) {
+        if (nextPageId > - 1) {
             pagesList[nextPageId].scrollIntoView(scrollConfig);
         }
     }
 
-    if (direction === directionTypes.DOWN) {
-        const previousPageId = Number(pageId) - 1;
+    if (direction === directionTypes.down) {
+        const previousPageId = pageId + 1;
 
-        if (previousPageId > -1) {
+        if (previousPageId < pagesList.length) {
             pagesList[previousPageId].scrollIntoView(scrollConfig);
         }
     }
 }
 
 /**
- * @param callee {Function}
- * @param timeoutMs {Number}
- * @returns {Function}
- */
-function debounce(callee, timeoutMs) {
-    let lastCall = 0;
-    let isFirstCall = false;
-    let lastCallTimer;
-
-    return function (...args) {
-        const previousCall = lastCall;
-        lastCall = Date.now();
-
-        if (!isFirstCall) {
-            callee(...args);
-        }
-
-        if (previousCall && lastCall - previousCall <= timeoutMs) {
-            isFirstCall = true;
-            clearTimeout(lastCallTimer);
-        }
-
-        lastCallTimer = setTimeout(() => {
-            isFirstCall = false;
-        }, timeoutMs);
-    };
-}
-
-/**
  * @param event {WheelEvent}
- * @param pagesList {Element[]}
  * @returns {void}
  */
-function listenerWheel(event, pagesList) {
+function listenerWheel(event) {
     event.preventDefault();
-    scroll(getDirectionWheel(event.deltaY), pagesList);
+
+    const direction = getDirection(event.deltaY);
+
+    scroll(direction);
 }
 
 /**
@@ -137,25 +54,30 @@ function listenerWheel(event, pagesList) {
  */
 function listenerTouchStart(event) {
     event.preventDefault();
-    getDirectionTouch(event.touches[0].clientY);
+
+    pageYOffsetStore.set(event.touches[0].clientY);
 }
 
 /**
  * @param event {TouchEvent}
- * @param pagesList {Element[]}
  * @returns {void}
  */
-function listenerTouchFinish(event, pagesList) {
+function listenerTouchFinish(event) {
     event.preventDefault();
-    scroll(getDirectionTouch(event.changedTouches[0].clientY), pagesList);
+
+    const pageYOffset = pageYOffsetStore.get();
+    const deltaY = pageYOffset - event.changedTouches[0].clientY;
+    const direction = getDirection(deltaY);
+
+    scroll(direction);
 }
 
 /**
  * @param event {UIEvent}
- * @param pagesList {Element[]}
  * @returns {void}
  */
-function listenerResize(event, pagesList) {
+function listenerResize(event) {
+    const pagesList = pagesListStore.get();
     const elementInViewport = getElementInViewport(pagesList);
 
     if (!elementInViewport) {
@@ -167,53 +89,26 @@ function listenerResize(event, pagesList) {
 
 /**
  * @param event {KeyboardEvent}
- * @param pagesList {Element[]}
  * @returns {void}
  */
-function listenerKeyDown(event, pagesList) {
-    if (event.key === 'ArrowDown') {
-        scroll(directionTypes.UP, pagesList);
-    } else if (event.key === 'ArrowUp') {
-        scroll(directionTypes.DOWN, pagesList);
+function listenerKeyDown(event) {
+    if (event.key === keyTypes.arrowDown) {
+        scroll(directionTypes.up);
+    } else if (event.key === keyTypes.arrowUp) {
+        scroll(directionTypes.down);
     }
 }
 
 /**
- * @param pages {HTMLCollection}
+ * @param pagesList {Element[]}
  * @returns {void}
  */
-export function scrollPage(pages) {
-    const pagesList = Array.from(pages);
+export function scrollPage(pagesList) {
+    pagesListStore.set(pagesList);
 
-    pagesList.map((element, index) => {
-        element.setAttribute(DATA_ATTRIBUTE_PAGE_ID, index.toString());
-    });
-
-    const debouncedWheel = debounce(listenerWheel, 50);
-
-    window.addEventListener(
-        listenerTypes.wheel,
-        (event) => debouncedWheel(event, pagesList),
-        listenerConfig,
-    );
-    window.addEventListener(
-        listenerTypes.touchstart,
-        (event) => listenerTouchStart(event),
-        listenerConfig,
-    );
-    window.addEventListener(
-        listenerTypes.touchend,
-        (event) => listenerTouchFinish(event, pagesList),
-        listenerConfig,
-    );
-    window.addEventListener(
-        listenerTypes.keydown,
-        (event) => listenerKeyDown(event, pagesList),
-        listenerConfig,
-    );
-    window.addEventListener(
-        listenerTypes.resize,
-        (event) => listenerResize(event, pagesList),
-        listenerConfig,
-    );
+    window.addEventListener(listenerTypes.wheel, listenerWheel, listenerConfig);
+    window.addEventListener(listenerTypes.touchstart, listenerTouchStart, listenerConfig);
+    window.addEventListener(listenerTypes.touchend, listenerTouchFinish, listenerConfig);
+    window.addEventListener(listenerTypes.keydown, listenerKeyDown, listenerConfig);
+    window.addEventListener(listenerTypes.resize, listenerResize, listenerConfig);
 }

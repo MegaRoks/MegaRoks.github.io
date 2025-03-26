@@ -6,8 +6,8 @@
  * @enum {DirectionType}
  */
 export const directionTypes = {
-    UP: 'up',
-    DOWN: 'down',
+    up: 'up',
+    down: 'down',
 };
 
 /** @type {ScrollIntoViewOptions} */
@@ -44,3 +44,15 @@ export const listenerTypes = {
 export const listenerConfig = {
     passive: false,
 };
+
+/**
+ * @typedef {Object} KeyTypes
+ * @property {string} arrowUp
+ * @property {string} arrowDown
+ */
+
+/** @type {KeyTypes} */
+export const keyTypes = {
+    arrowUp: 'ArrowUp',
+    arrowDown: 'ArrowDown',
+}
