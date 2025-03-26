@@ -6,7 +6,7 @@ const pageYOffsetStore = createPageYOffsetStore(0);
 const pagesListStore = createPagesListStore([]);
 
 /**
- * @param direction {directionTypes}
+ * @param {directionTypes} direction
  * @returns {void}
  */
 function scroll(direction) {
@@ -37,7 +37,7 @@ function scroll(direction) {
 }
 
 /**
- * @param event {WheelEvent}
+ * @param {WheelEvent} event
  * @returns {void}
  */
 function listenerWheel(event) {
@@ -47,7 +47,7 @@ function listenerWheel(event) {
 }
 
 /**
- * @param event {TouchEvent}
+ * @param {TouchEvent} event
  * @returns {void}
  */
 function listenerTouchStart(event) {
@@ -57,7 +57,7 @@ function listenerTouchStart(event) {
 }
 
 /**
- * @param event {TouchEvent}
+ * @param {TouchEvent} event
  * @returns {void}
  */
 function listenerTouchFinish(event) {
@@ -71,7 +71,7 @@ function listenerTouchFinish(event) {
 }
 
 /**
- * @param event {UIEvent}
+ * @param {UIEvent} event
  * @returns {void}
  */
 function listenerResize(event) {
@@ -86,19 +86,21 @@ function listenerResize(event) {
 }
 
 /**
- * @param event {KeyboardEvent}
+ * @param {KeyboardEvent} event
  * @returns {void}
  */
 function listenerKeyDown(event) {
     if (event.key === keyTypes.arrowDown) {
         scroll(directionTypes.up);
-    } else if (event.key === keyTypes.arrowUp) {
+    }
+
+    if (event.key === keyTypes.arrowUp) {
         scroll(directionTypes.down);
     }
 }
 
 /**
- * @param pagesList {Element[]}
+ * @param {Element[]} pagesList
  * @returns {void}
  */
 export function scrollPage(pagesList) {

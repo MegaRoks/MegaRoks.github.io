@@ -1,7 +1,7 @@
 import { directionTypes } from './config.js';
 
 /**
- * @param deltaY {Number}
+ * @param {Number} deltaY
  * @returns {directionTypes}
  */
 export function getDirection(deltaY) {
@@ -20,7 +20,7 @@ export function getDirection(deltaY) {
 }
 
 /**
- * @param pagesList {Element[]}
+ * @param {Element[]} pagesList
  * @returns {Element | undefined}
  */
 export function getElementInViewport(pagesList) {
@@ -43,10 +43,10 @@ export function getElementInViewport(pagesList) {
 }
 
 /**
- * @param callee {Function}
- * @param timeoutMs {Number}
+ * @param {Function} callee
+ * @param {number} timeoutMs
  * @returns {Function}
- */
+ * */
 export function debounce(callee, timeoutMs) {
     let lastCall = 0;
     let isFirstCall = false;
