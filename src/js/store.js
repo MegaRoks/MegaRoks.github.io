@@ -1,6 +1,8 @@
 /**
- * @param {number} initialPageYOffset - Initial page Y offset value.
- * @returns {{ get: () => number, set: (newPageYOffset: number) => void }} - Object with get and set methods.
+ * Creates a store to hold the current page Y offset value.
+ *
+ * @param {number} initialPageYOffset - The initial vertical offset value of the page.
+ * @returns {{ get: () => number, set: (newPageYOffset: number) => void }} An object with get and set methods to access and update the pageYOffset.
  */
 export function createPageYOffsetStore(initialPageYOffset) {
     let pageYOffset = initialPageYOffset;
@@ -16,8 +18,10 @@ export function createPageYOffsetStore(initialPageYOffset) {
 }
 
 /**
- * @param {Element[]} initialPagesList - Initial pages list  .
- * @returns {{ get: () => Element[], set: (newPageYOffset: Element[]) => void }} - Object with get and set methods.
+ * Creates a store to hold a list of page elements.
+ *
+ * @param {Element[]} initialPagesList - The initial list of page elements.
+ * @returns {{ get: () => Element[], set: (newPagesList: Element[]) => void }} An object with get and set methods to access and update the pages list.
  */
 export function createPagesListStore(initialPagesList) {
     let pagesList = initialPagesList;

@@ -1,5 +1,5 @@
 /**
- * @typedef {'up' | 'down'} DirectionType
+ * @typedef {'up' | 'down' | 'stop'} DirectionType
  */
 
 /**
@@ -8,6 +8,7 @@
 export const directionTypes = {
     up: 'up',
     down: 'down',
+    stop: 'stop'
 };
 
 /** @type {ScrollIntoViewOptions} */
@@ -35,14 +36,10 @@ export const listenerTypes = {
     resize: 'resize',
 };
 
-/**
- * @typedef {Object} ListenerConfig
- * @property {boolean} passive
- */
-
-/** @type {ListenerConfig} */
+/** @type {AddEventListenerOptions} */
 export const listenerConfig = {
     passive: false,
+    once: false,
 };
 
 /**
