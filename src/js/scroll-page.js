@@ -1,6 +1,6 @@
 import { directionTypes, scrollConfig, listenerTypes, listenerConfig, keyTypes } from './config.js';
 import { createPageYOffsetStore, createPagesListStore } from './store.js';
-import { getDirection, getElementInViewport } from './utils.js';
+import { getDirection, getElementInViewport, createPerformanceTracker } from './utils.js';
 
 const pageYOffsetStore = createPageYOffsetStore(0);
 const pagesListStore = createPagesListStore([]);
@@ -9,47 +9,21 @@ const pagesListStore = createPagesListStore([]);
  * Smoothly scrolls an element into view and calls the callback when the element is fully visible.
  *
  * @param {Element} element - The element to scroll into view.
- * @param {ScrollIntoViewOptions} config - Options for scrollIntoView.
- * @param {(elapsedTime: number) => void} callback - Callback function called when scrolling finishes. Receives elapsed time (ms).
+ * @param {() => void} callback - Callback function called when scrolling finishes. Receives elapsed time (ms).
  * @returns {void}
  */
-function scrollIntoViewWithCallback(element, config, callback) {
-    const startTime = performance.now();
-
+function scrollIntoViewWithCallback(element, callback) {
     const observer = new IntersectionObserver((entries, obs) => {
         entries.forEach(entry => {
             if (entry.isIntersecting && entry.intersectionRatio >= 1.0) {
-                const endTime = performance.now();
-                const elapsedTime = endTime - startTime;
-
                 obs.disconnect();
-                callback(elapsedTime);
+                callback();
             }
         });
     }, { threshold: 1.0 });
 
     observer.observe(element);
-    element.scrollIntoView(config);
-}
-
-/**
- * Initiates scrolling to the target element based on the specified direction.
- * Detaches event listeners before scrolling, then reattaches them after the scroll finishes.
- *
- * @param {directionTypes} direction - The scrolling direction.
- * @param {Element} element - The target element to scroll into view.
- * @returns {void}
- */
-function scroll(direction, element) {
-    detachListeners();
-
-    scrollIntoViewWithCallback(element, scrollConfig, (elapsedTime) => {
-        console.debug(`Scroll ${direction} finished in ${elapsedTime.toFixed(2)} ms.`);
-
-        setTimeout(()=> {
-            attachListeners();
-        }, elapsedTime);
-    });
+    element.scrollIntoView(scrollConfig);
 }
 
 /**
@@ -59,12 +33,20 @@ function scroll(direction, element) {
  * @returns {void}
  */
 function scrollToElement(direction) {
-    console.debug(`scrollToElement invoked with direction: ${direction}.`);
+    detachListeners();
+
+    const scrollTracking = createPerformanceTracker((elapsedTime) => {
+        console.debug(`Scroll ${direction} finished in ${elapsedTime.toFixed(2)} ms.`);
+
+        setTimeout(()=> {
+            attachListeners();
+        }, elapsedTime);
+    });
 
     if (direction === directionTypes.stop) {
         console.debug('Scrolling stopped.');
 
-        return;
+        scrollTracking();
     }
 
     const pagesList = pagesListStore.get();
@@ -73,7 +55,7 @@ function scrollToElement(direction) {
     if (!elementInViewport) {
         console.debug('No element in viewport found.');
 
-        return;
+        scrollTracking();
     }
 
     const pageId = pagesList.indexOf(elementInViewport);
@@ -84,9 +66,13 @@ function scrollToElement(direction) {
         const nextPageId = pageId - 1;
 
         if (nextPageId > -1) {
-            console.debug(`Next page index for UP: ${nextPageId}.`);
+            console.debug(`Next page index for ${direction}: ${nextPageId}.`);
 
-            scroll(direction, pagesList[nextPageId]);
+            scrollIntoViewWithCallback(pagesList[nextPageId], () => {
+                scrollTracking();
+            });
+        } else {
+            scrollTracking();
         }
     }
 
@@ -94,9 +80,13 @@ function scrollToElement(direction) {
         const previousPageId = pageId + 1;
 
         if (previousPageId < pagesList.length) {
-            console.debug(`Next page index for DOWN: ${previousPageId}.`);
+            console.debug(`Next page index for ${direction}: ${previousPageId}.`);
 
-            scroll(direction, pagesList[previousPageId]);
+            scrollIntoViewWithCallback(pagesList[previousPageId], () => {
+                scrollTracking();
+            });
+        } else {
+            scrollTracking();
         }
     }
 }
@@ -144,6 +134,7 @@ function listenerTouchFinish(event) {
 
     console.debug(`Determined direction from touch: ${direction}.`);
 
+
     scrollToElement(direction);
 }
 
@@ -177,8 +168,6 @@ function listenerResize(event) {
 function listenerKeyDown(event) {
     event.preventDefault();
 
-    console.debug(`Keydown event: ${event.key}.`);
-
     if (event.key === keyTypes.arrowUp) {
         scrollToElement(directionTypes.up);
     }
@@ -189,7 +178,7 @@ function listenerKeyDown(event) {
 }
 
 /**
- * Attaches all event listeners using the given configuration.
+ * Attaches all event listeners.
  *
  * @returns {void}
  */

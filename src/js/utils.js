@@ -27,7 +27,7 @@ export function getDirection(deltaY) {
  * @returns {Element | undefined} The element with the highest intersection ratio or undefined if none is found.
  */
 export function getElementInViewport(pagesList) {
-    let bestElement = null;
+    let bestElement = undefined;
     let bestIntersection = 0;
 
     pagesList.forEach(element => {
@@ -43,4 +43,25 @@ export function getElementInViewport(pagesList) {
     });
 
     return bestElement;
+}
+
+/**
+ * Creates a performance tracker utility.
+ *
+ * This function records the start time when invoked and returns an "end" function.
+ * When you call the returned function, it calculates the elapsed time and invokes
+ * the provided callback with the elapsed time (in milliseconds).
+ *
+ * @param {Function} callback - A function to be called with the elapsed time.
+ * @returns {() => void} A function that, when invoked, calculates the elapsed time and calls the callback.
+ */
+export function createPerformanceTracker(callback) {
+    const startTime = performance.now();
+
+    return () => {
+        const endTime = performance.now();
+        const elapsedTime = endTime - startTime;
+
+        callback(elapsedTime);
+    };
 }
