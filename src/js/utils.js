@@ -7,11 +7,7 @@ import { directionTypes } from './config.js';
  * @returns {directionTypes} Returns directionTypes.
  */
 export function getDirection(deltaY) {
-    console.log('deltaY', deltaY);
-
     const delta = Math.sign(deltaY);
-
-    console.log('delta', delta);
 
     if (delta > 0) {
         return directionTypes.down;
