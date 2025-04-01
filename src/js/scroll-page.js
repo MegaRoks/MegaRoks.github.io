@@ -1,95 +1,10 @@
 import { directionTypes, scrollConfig, listenerTypes, listenerConfig, keyTypes } from './config.js';
 import { createPageYOffsetStore, createPagesListStore } from './store.js';
-import { getDirection, getElementInViewport, createPerformanceTracker } from './utils.js';
+import { scrollToElement } from './scroll.js';
+import { getDirection, getElementInViewport } from './utils.js';
 
 const pageYOffsetStore = createPageYOffsetStore(0);
 const pagesListStore = createPagesListStore([]);
-
-/**
- * Smoothly scrolls an element into view and calls the callback when the element is fully visible.
- *
- * @param {Element} element - The element to scroll into view.
- * @param {() => void} callback - Callback function called when scrolling finishes. Receives elapsed time (ms).
- * @returns {void}
- */
-function scrollIntoViewWithCallback(element, callback) {
-    const observer = new IntersectionObserver((entries, obs) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting && entry.intersectionRatio >= 1.0) {
-                obs.disconnect();
-                callback();
-            }
-        });
-    }, { threshold: 1.0 });
-
-    observer.observe(element);
-    element.scrollIntoView(scrollConfig);
-}
-
-/**
- * Determines and scrolls to the next or previous element based on the scrolling direction.
- *
- * @param {directionTypes} direction - The scrolling direction.
- * @returns {void}
- */
-function scrollToElement(direction) {
-    detachListeners();
-
-    const scrollTracking = createPerformanceTracker((elapsedTime) => {
-        console.debug(`Scroll ${direction} finished in ${elapsedTime.toFixed(2)} ms.`);
-
-        setTimeout(()=> {
-            attachListeners();
-        }, elapsedTime);
-    });
-
-    if (direction === directionTypes.stop) {
-        console.debug('Scrolling stopped.');
-
-        scrollTracking();
-    }
-
-    const pagesList = pagesListStore.get();
-    const elementInViewport = getElementInViewport(pagesList);
-
-    if (!elementInViewport) {
-        console.debug('No element in viewport found.');
-
-        scrollTracking();
-    }
-
-    const pageId = pagesList.indexOf(elementInViewport);
-
-    console.debug(`Current page index: ${pageId}.`);
-
-    if (direction === directionTypes.up) {
-        const nextPageId = pageId - 1;
-
-        if (nextPageId > -1) {
-            console.debug(`Next page index for ${direction}: ${nextPageId}.`);
-
-            scrollIntoViewWithCallback(pagesList[nextPageId], () => {
-                scrollTracking();
-            });
-        } else {
-            scrollTracking();
-        }
-    }
-
-    if (direction === directionTypes.down) {
-        const previousPageId = pageId + 1;
-
-        if (previousPageId < pagesList.length) {
-            console.debug(`Next page index for ${direction}: ${previousPageId}.`);
-
-            scrollIntoViewWithCallback(pagesList[previousPageId], () => {
-                scrollTracking();
-            });
-        } else {
-            scrollTracking();
-        }
-    }
-}
 
 /**
  * Wheel event listener.
@@ -101,10 +16,16 @@ function listenerWheel(event) {
     event.preventDefault();
 
     const direction = getDirection(event.deltaY);
+    const pagesList = pagesListStore.get();
 
     console.debug(`Determined direction from wheel: ${direction}.`);
 
-    scrollToElement(direction);
+    scrollToElement(
+        direction,
+        pagesList,
+        () => detachListeners(),
+        () => attachListeners(),
+    );
 }
 
 /**
@@ -131,11 +52,16 @@ function listenerTouchFinish(event) {
     const pageYOffset = pageYOffsetStore.get();
     const deltaY = pageYOffset - event.changedTouches[0].clientY;
     const direction = getDirection(deltaY);
+    const pagesList = pagesListStore.get();
 
     console.debug(`Determined direction from touch: ${direction}.`);
 
-
-    scrollToElement(direction);
+    scrollToElement(
+        direction,
+        pagesList,
+        () => detachListeners(),
+        () => attachListeners(),
+    );
 }
 
 /**
@@ -148,15 +74,10 @@ function listenerResize(event) {
     event.preventDefault();
 
     const pagesList = pagesListStore.get();
-    const elementInViewport = getElementInViewport(pagesList);
 
-    if (!elementInViewport) {
-        console.debug('No element in viewport found.');
-
-        return;
-    }
-
-    elementInViewport.scrollIntoView(scrollConfig);
+    getElementInViewport(pagesList, (element) => {
+        element.scrollIntoView(scrollConfig);
+    });
 }
 
 /**
@@ -168,12 +89,24 @@ function listenerResize(event) {
 function listenerKeyDown(event) {
     event.preventDefault();
 
+    const pagesList = pagesListStore.get();
+
     if (event.key === keyTypes.arrowUp) {
-        scrollToElement(directionTypes.up);
+        scrollToElement(
+            directionTypes.up,
+            pagesList,
+            () => detachListeners(),
+            () => attachListeners(),
+        );
     }
 
     if (event.key === keyTypes.arrowDown) {
-        scrollToElement(directionTypes.down);
+        scrollToElement(
+            directionTypes.down,
+            pagesList,
+            () => detachListeners(),
+            () => attachListeners(),
+        );
     }
 }
 

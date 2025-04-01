@@ -21,28 +21,33 @@ export function getDirection(deltaY) {
 }
 
 /**
- * Finds and returns the element from pagesList that has the highest visible intersection ratio with the viewport.
+ * Observes a list of elements to determine which one has the highest visibility within the viewport.
+ * Once the element with the greatest intersection ratio is determined, the callback is invoked with that element,
+ * and the observer disconnects.
  *
- * @param {Element[]} pagesList - Array of page elements.
- * @returns {Element | undefined} The element with the highest intersection ratio or undefined if none is found.
+ * @param {Element[]} pagesList - An array of DOM elements to observe.
+ * @param {(element: Element|null) => void} callback - A callback function that receives the element with the highest visibility.
+ * @returns {void}
  */
-export function getElementInViewport(pagesList) {
-    let bestElement = undefined;
-    let bestIntersection = 0;
+export function getElementInViewport(pagesList, callback) {
+    let element = null;
+    let intersection = 0;
 
-    pagesList.forEach(element => {
-        const rect = element.getBoundingClientRect();
-        const visibleHeight = Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0);
-        const totalHeight = rect.height;
-        const intersectionRatio = totalHeight > 0 ? visibleHeight / totalHeight : 0;
+    const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.intersectionRatio > intersection) {
+                intersection = entry.intersectionRatio;
+                element = entry.target;
+            }
+        });
 
-        if (intersectionRatio > bestIntersection) {
-            bestIntersection = intersectionRatio;
-            bestElement = element;
-        }
+        callback(element);
+        observer.disconnect();
+    }, {
+        threshold: [0, 0.25, 0.5, 0.75, 1.0]
     });
 
-    return bestElement;
+    pagesList.forEach(element => observer.observe(element));
 }
 
 /**
