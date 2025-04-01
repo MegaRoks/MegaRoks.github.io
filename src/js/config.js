@@ -17,7 +17,6 @@ export const scrollConfig = {
     behavior: 'smooth',
 };
 
-
 /**
  * @typedef {Object} ListenerTypes
  * @property {keyof WindowEventMap} wheel
