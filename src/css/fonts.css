@@ -5,11 +5,3 @@
     font-style: normal;
     font-display: swap;
 }
-
-@font-face {
-    font-family: 'Alte Haas Grotesk';
-    src: url('../fonts/alte-haas-grotesk-bold.woff2') format('woff2');
-    font-weight: 700;
-    font-style: normal;
-    font-display: swap;
-}
