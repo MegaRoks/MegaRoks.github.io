@@ -19,7 +19,7 @@ npm start          # http://localhost:8000
 npm run lint       # eslint, stylelint, html-validate
 npm run check      # local links, font coverage, metadata origin, JSON-LD, og:image, sitemap
 npm test           # both of the above
-npx lhci autorun   # Lighthouse, thresholds in lighthouserc.json
+npm run lighthouse # Lighthouse, thresholds in tools/lighthouserc.json
 ```
 
 CI runs the same set on every push to `master` and on every pull request.

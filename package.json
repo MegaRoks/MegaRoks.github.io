@@ -10,10 +10,11 @@
         "start": "http-server . --port 8000 --cache -1",
         "lint:js": "eslint .",
         "lint:css": "stylelint \"src/css/*.css\"",
-        "lint:html": "html-validate index.html 404.html",
+        "lint:html": "html-validate --config tools/htmlvalidate.json index.html 404.html",
         "lint": "npm run lint:js && npm run lint:css && npm run lint:html",
         "check": "node tools/check-page.mjs",
-        "test": "npm run lint && npm run check"
+        "test": "npm run lint && npm run check",
+        "lighthouse": "lhci autorun --config=tools/lighthouserc.json"
     },
     "devDependencies": {
         "@eslint/js": "^10.0.1",
@@ -24,5 +25,13 @@
         "http-server": "^14.1.1",
         "stylelint": "^17.15.0",
         "stylelint-config-standard": "^40.0.0"
+    },
+    "stylelint": {
+        "extends": "stylelint-config-standard",
+        "rules": {
+            "custom-property-pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$",
+            "selector-class-pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*(__[a-z][a-z0-9]*(-[a-z0-9]+)*)?$",
+            "custom-property-empty-line-before": null
+        }
     }
 }
