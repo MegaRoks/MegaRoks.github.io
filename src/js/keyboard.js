@@ -113,14 +113,15 @@ function resolveTargetIndex(event, currentIndex, lastIndex) {
 }
 
 /**
- * Finds the section occupying the middle of the viewport.
+ * Finds the section occupying the middle of the scroll container.
  *
+ * @param {Element} container - The scrolling element holding the sections.
  * @param {Element[]} pages - The section elements, in document order.
  * @returns {number} Index of the current section.
  */
-function getCurrentIndex(pages) {
-    const viewportMiddle = window.scrollY + window.innerHeight / 2;
-    const index = pages.findLastIndex((page) => page.offsetTop <= viewportMiddle);
+function getCurrentIndex(container, pages) {
+    const middle = container.getBoundingClientRect().top + container.clientHeight / 2;
+    const index = pages.findLastIndex((page) => page.getBoundingClientRect().top <= middle);
 
     return Math.max(index, 0);
 }
@@ -128,10 +129,11 @@ function getCurrentIndex(pages) {
 /**
  * Enables section-wise keyboard navigation.
  *
+ * @param {Element} container - The scrolling element holding the sections.
  * @param {Element[]} pages - The section elements, in document order.
  * @returns {{ destroy: () => void }} Handle that detaches the listener.
  */
-export function createKeyboardNavigation(pages) {
+export function createKeyboardNavigation(container, pages) {
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
     let isScrolling = false;
@@ -147,14 +149,14 @@ export function createKeyboardNavigation(pages) {
 
         function release() {
             clearTimeout(timeoutId);
-            window.removeEventListener('scrollend', release);
+            container.removeEventListener('scrollend', release);
 
             isScrolling = false;
         }
 
         const timeoutId = setTimeout(release, SCROLL_END_FALLBACK_MS);
 
-        window.addEventListener('scrollend', release);
+        container.addEventListener('scrollend', release);
     }
 
     /**
@@ -185,7 +187,7 @@ export function createKeyboardNavigation(pages) {
             return;
         }
 
-        goToPage(resolveTargetIndex(event, getCurrentIndex(pages), pages.length - 1));
+        goToPage(resolveTargetIndex(event, getCurrentIndex(container, pages), pages.length - 1));
     }
 
     /**

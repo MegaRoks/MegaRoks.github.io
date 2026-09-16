@@ -1,19 +1,18 @@
 html {
     font-family: 'Alte Haas Grotesk', system-ui, sans-serif;
-    scroll-snap-type: y mandatory;
-    scroll-behavior: smooth;
-    overscroll-behavior-y: contain;
 }
 
-@media (prefers-reduced-motion: reduce) {
-    html {
-        scroll-behavior: auto;
-    }
+body {
+    overflow: hidden;
 }
 
 .content {
     display: grid;
-    grid-auto-rows: minmax(100dvh, auto);
+    grid-auto-rows: minmax(100%, auto);
+    height: 100dvh;
+    overflow-y: scroll;
+    overscroll-behavior-y: contain;
+    scroll-snap-type: y mandatory;
 }
 
 .page {
@@ -21,7 +20,12 @@ html {
     place-items: center;
     padding: var(--main-padding);
     scroll-snap-align: start;
-    scroll-snap-stop: always;
+}
+
+@media (hover: hover) {
+    .page {
+        scroll-snap-stop: always;
+    }
 }
 
 .page:nth-child(odd) {
