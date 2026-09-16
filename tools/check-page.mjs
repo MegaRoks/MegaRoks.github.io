@@ -25,6 +25,12 @@ const SUBSET_RANGES = [
     [0x2122, 0x2122],
 ];
 
+/** LinkedIn's Post Inspector warns below this. */
+const DESCRIPTION_MIN = 100;
+
+/** Google truncates the search snippet past roughly this. */
+const DESCRIPTION_MAX = 155;
+
 /** WCAG AA floor for text against its background. */
 const TEXT_CONTRAST = 4.5;
 
@@ -189,6 +195,37 @@ async function checkSocialImage(html) {
 }
 
 /**
+ * Descriptions are long enough for LinkedIn and short enough for Google.
+ *
+ * @param {string} html - Markup of the home page.
+ * @returns {void}
+ */
+function checkDescriptions(html) {
+    const descriptions = [
+        ['description', /<meta name="description" content="([^"]+)"/],
+        ['og:description', /<meta property="og:description" content="([^"]+)"/],
+        ['twitter:description', /<meta name="twitter:description" content="([^"]+)"/],
+    ];
+
+    for (const [name, pattern] of descriptions) {
+        const match = html.match(pattern);
+
+        if (!match) {
+            failures.push(`index.html: no ${name}`);
+            continue;
+        }
+
+        const { length } = match[1];
+
+        expect(length >= DESCRIPTION_MIN, `${name} is ${length} characters, needs at least ${DESCRIPTION_MIN}`);
+
+        if (name === 'description') {
+            expect(length <= DESCRIPTION_MAX, `${name} is ${length} characters, over the ${DESCRIPTION_MAX} Google shows`);
+        }
+    }
+}
+
+/**
  * Relative luminance of a greyscale CSS lightness.
  *
  * @param {number} lightness - Lightness in percent.
@@ -276,6 +313,7 @@ for (const page of PAGES) {
 const home = await readFile('index.html', 'utf8');
 
 checkStructuredData(home);
+checkDescriptions(home);
 await checkSocialImage(home);
 await checkSitemap();
 await checkContrast();
