@@ -1,5 +1,7 @@
-import { scrollPage } from './scroll-page.js';
+import { createKeyboardNavigation } from './keyboard.js';
 
-const pagesList = Array.from(document.querySelectorAll('#scroll-id .page'));
+const pagesList = Array.from(document.querySelectorAll('.content > .page'));
 
-scrollPage(pagesList);
+if (pagesList.length > 0) {
+    createKeyboardNavigation(pagesList);
+}
