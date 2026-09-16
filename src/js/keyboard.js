@@ -1,13 +1,3 @@
-/**
- * Keyboard navigation for the scroll-snap sections.
- *
- * CSS scroll-snap covers wheel, touch and the scrollbar on its own, but native
- * keyboard scrolling moves by a line at a time, which fights a mandatory snap
- * container: a press nudges the page a few pixels, snap pulls it back, and
- * repeated presses can strand the page between two sections. So keys move by
- * whole sections instead of by lines.
- */
-
 /** How long to wait for `scrollend` before assuming the scroll has settled. */
 const SCROLL_END_FALLBACK_MS = 700;
 
