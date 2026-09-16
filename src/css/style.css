@@ -20,12 +20,7 @@ body {
     place-items: center;
     padding: var(--main-padding);
     scroll-snap-align: start;
-}
-
-@media (hover: hover) {
-    .page {
-        scroll-snap-stop: always;
-    }
+    scroll-snap-stop: always;
 }
 
 .page:nth-child(odd) {
