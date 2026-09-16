@@ -1,7 +1,5 @@
 html {
     font-family: 'Alte Haas Grotesk', system-ui, sans-serif;
-    font-size: var(--main-font-size);
-    line-height: var(--main-line-height);
     scroll-snap-type: y mandatory;
     scroll-behavior: smooth;
     overscroll-behavior-y: contain;
@@ -38,6 +36,11 @@ html {
 
 .page__link {
     color: var(--link-color);
+}
+
+.page__link:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 0.2em;
 }
 
 @media (hover: hover) {
