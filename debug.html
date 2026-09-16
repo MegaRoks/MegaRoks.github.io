@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Layout probe</title>
+    <meta name="robots" content="noindex">
+    <link rel="stylesheet" type="text/css" href="/src/css/reset.css">
+    <link rel="stylesheet" type="text/css" href="/src/css/variables.css">
+    <link rel="stylesheet" type="text/css" href="/src/css/style.css">
+    <style>
+        .probe {
+            position: fixed;
+            inset: 0;
+            z-index: 10;
+            overflow: auto;
+            padding: 3rem 1rem;
+            font-family: ui-monospace, monospace;
+            font-size: 15px;
+            line-height: 1.5;
+            color: hsl(0deg 0% 100%);
+            background-color: hsl(0deg 0% 0% / 82%);
+        }
+
+        .probe b {
+            color: hsl(120deg 60% 65%);
+        }
+
+        .probe .bad {
+            color: hsl(0deg 80% 65%);
+        }
+
+        .unit {
+            position: fixed;
+            top: 0;
+            left: -9999px;
+            width: 1px;
+        }
+
+        .unit--dvh { height: 100dvh; }
+        .unit--svh { height: 100svh; }
+        .unit--lvh { height: 100lvh; }
+        .unit--vh  { height: 100vh; }
+    </style>
+</head>
+<body>
+<div class="unit unit--dvh"></div>
+<div class="unit unit--svh"></div>
+<div class="unit unit--lvh"></div>
+<div class="unit unit--vh"></div>
+
+<main class="content">
+    <section class="page"><p class="page__text">1</p></section>
+    <section class="page"><p class="page__text">2</p></section>
+    <section class="page"><p class="page__text">3</p></section>
+</main>
+
+<pre class="probe" id="out"></pre>
+
+<script>
+    const out = document.getElementById('out');
+    const content = document.querySelector('.content');
+    const pages = [...document.querySelectorAll('.page')];
+    const unit = (c) => document.querySelector('.unit--' + c).getBoundingClientRect().height;
+
+    function render() {
+        const containerH = content.clientHeight;
+        const rowH = pages[0].getBoundingClientRect().height;
+        const gap = containerH - rowH;
+        const mark = (n) => (Math.abs(n) < 1 ? '<b>' + n.toFixed(2) + '</b>' : '<span class="bad">' + n.toFixed(2) + '</span>');
+
+        out.innerHTML = [
+            'РАЗНИЦА строка/контейнер',
+            '  ' + mark(gap) + '  <- главное число',
+            '',
+            'container.clientHeight  ' + containerH.toFixed(2),
+            'section height          ' + rowH.toFixed(2),
+            'scrollHeight            ' + content.scrollHeight.toFixed(2),
+            'scrollTop               ' + content.scrollTop.toFixed(2),
+            '',
+            'window.innerHeight      ' + window.innerHeight,
+            'visualViewport.height   ' + (window.visualViewport ? window.visualViewport.height.toFixed(2) : '-'),
+            'visualViewport.offsetTop ' + (window.visualViewport ? window.visualViewport.offsetTop.toFixed(2) : '-'),
+            'documentElement.client  ' + document.documentElement.clientHeight,
+            '',
+            '100vh                   ' + unit('vh').toFixed(2),
+            '100dvh                  ' + unit('dvh').toFixed(2),
+            '100svh                  ' + unit('svh').toFixed(2),
+            '100lvh                  ' + unit('lvh').toFixed(2),
+            '',
+            'devicePixelRatio        ' + window.devicePixelRatio,
+            'safe-area-inset-bottom  ' + getComputedStyle(document.documentElement).getPropertyValue('--sab'),
+        ].join('\n');
+    }
+
+    document.documentElement.style.setProperty('--sab', 'env(safe-area-inset-bottom, 0px)');
+    render();
+    addEventListener('resize', render);
+    addEventListener('scroll', render, true);
+    window.visualViewport?.addEventListener('resize', render);
+    setInterval(render, 500);
+</script>
+</body>
+</html>
