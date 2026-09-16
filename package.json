@@ -7,7 +7,7 @@
     "license": "MIT",
     "type": "module",
     "scripts": {
-        "start": "http-server . --port 8000 --cache -1",
+        "start": "http-server . -p 8000 -c-1",
         "lint:js": "eslint .",
         "lint:css": "stylelint \"src/css/*.css\"",
         "lint:html": "html-validate --config tools/htmlvalidate.json index.html 404.html",
