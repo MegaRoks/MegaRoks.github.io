@@ -145,16 +145,14 @@ export function createKeyboardNavigation(pages) {
     function lockUntilScrollEnd() {
         isScrolling = true;
 
-        let timeoutId;
-
-        const release = () => {
+        function release() {
             clearTimeout(timeoutId);
             window.removeEventListener('scrollend', release);
 
             isScrolling = false;
-        };
+        }
 
-        timeoutId = setTimeout(release, SCROLL_END_FALLBACK_MS);
+        const timeoutId = setTimeout(release, SCROLL_END_FALLBACK_MS);
 
         window.addEventListener('scrollend', release);
     }

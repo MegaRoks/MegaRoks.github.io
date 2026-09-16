@@ -1,0 +1,28 @@
+{
+    "name": "megaroks.github.io",
+    "version": "1.0.0",
+    "private": true,
+    "description": "Personal page of Maxim Kamenev",
+    "homepage": "https://megaroks.github.io/",
+    "license": "MIT",
+    "type": "module",
+    "scripts": {
+        "start": "http-server . --port 8000 --cache -1",
+        "lint:js": "eslint .",
+        "lint:css": "stylelint \"src/css/*.css\"",
+        "lint:html": "html-validate index.html 404.html",
+        "lint": "npm run lint:js && npm run lint:css && npm run lint:html",
+        "check": "node tools/check-page.mjs",
+        "test": "npm run lint && npm run check"
+    },
+    "devDependencies": {
+        "@eslint/js": "^10.0.1",
+        "@lhci/cli": "^0.15.1",
+        "eslint": "^10.10.0",
+        "globals": "^17.12.0",
+        "html-validate": "^11.16.0",
+        "http-server": "^14.1.1",
+        "stylelint": "^17.15.0",
+        "stylelint-config-standard": "^40.0.0"
+    }
+}
