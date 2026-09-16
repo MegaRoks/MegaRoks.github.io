@@ -20,6 +20,8 @@ body {
 .page {
     display: grid;
     place-items: center;
+    align-content: center;
+    gap: var(--main-padding);
     padding: var(--main-padding);
     scroll-snap-align: start;
     scroll-snap-stop: always;
