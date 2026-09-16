@@ -25,6 +25,12 @@ const SUBSET_RANGES = [
     [0x2122, 0x2122],
 ];
 
+/** WCAG AA floor for text against its background. */
+const TEXT_CONTRAST = 4.5;
+
+/** WCAG floor for a link against the text around it, absent an underline. */
+const LINK_CONTRAST = 3;
+
 const failures = [];
 
 /**
@@ -183,6 +189,72 @@ async function checkSocialImage(html) {
 }
 
 /**
+ * Relative luminance of a greyscale CSS lightness.
+ *
+ * @param {number} lightness - Lightness in percent.
+ * @returns {number} Relative luminance per WCAG.
+ */
+function luminance(lightness) {
+    const channel = lightness / 100;
+
+    return channel <= 0.03928 ? channel / 12.92 : Math.pow((channel + 0.055) / 1.055, 2.4);
+}
+
+/**
+ * Contrast ratio between two greyscale lightness values.
+ *
+ * @param {number} a - First lightness in percent.
+ * @param {number} b - Second lightness in percent.
+ * @returns {number} Ratio between 1 and 21.
+ */
+function contrast(a, b) {
+    const [lighter, darker] = [luminance(a), luminance(b)].sort((x, y) => y - x);
+
+    return (lighter + 0.05) / (darker + 0.05);
+}
+
+/**
+ * Both colour schemes keep text readable and links distinguishable.
+ *
+ * Lighthouse stopped covering link-in-text-block once the sections moved into
+ * a scroll container, so the thresholds are asserted here instead.
+ *
+ * @returns {Promise<void>} Resolves once the variables have been read.
+ */
+async function checkContrast() {
+    const css = await readFile('src/css/variables.css', 'utf8');
+    const palette = {};
+
+    for (const [, name, lightness] of css.matchAll(/--([\w-]+):\s*hsl\(0deg 0% ([\d.]+)%\)/g)) {
+        palette[name] = Number(lightness);
+    }
+
+    const coloured = css.match(/--[\w-]+:\s*hsl\((?!0deg 0% )/);
+
+    if (coloured) {
+        failures.push('variables.css has a non-greyscale colour; checkContrast only handles greyscale');
+        return;
+    }
+
+    const schemes = [
+        { name: 'dark', text: 'primary-color', background: 'primary-background-color', link: 'primary-link-color' },
+        { name: 'light', text: 'secondary-color', background: 'secondary-background-color', link: 'secondary-link-color' },
+    ];
+
+    for (const { name, text, background, link } of schemes) {
+        const pairs = [
+            [`${name}: text on background`, contrast(palette[text], palette[background]), TEXT_CONTRAST],
+            [`${name}: link on background`, contrast(palette[link], palette[background]), TEXT_CONTRAST],
+            [`${name}: link against surrounding text`, contrast(palette[link], palette[text]), LINK_CONTRAST],
+        ];
+
+        for (const [label, ratio, floor] of pairs) {
+            expect(ratio >= floor, `${label} is ${ratio.toFixed(2)}:1, needs ${floor}:1`);
+        }
+    }
+}
+
+/**
  * The sitemap lists the canonical URL.
  *
  * @returns {Promise<void>} Resolves once the sitemap has been read.
@@ -206,6 +278,7 @@ const home = await readFile('index.html', 'utf8');
 checkStructuredData(home);
 await checkSocialImage(home);
 await checkSitemap();
+await checkContrast();
 
 if (failures.length > 0) {
     process.stderr.write(`${failures.map((failure) => `  ${failure}`).join('\n')}\n`);

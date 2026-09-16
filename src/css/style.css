@@ -24,11 +24,15 @@ body {
 }
 
 .page:nth-child(odd) {
+    --link-color: var(--primary-link-color);
+
     color: var(--primary-color);
     background-color: var(--primary-background-color);
 }
 
 .page:nth-child(even) {
+    --link-color: var(--secondary-link-color);
+
     color: var(--secondary-color);
     background-color: var(--secondary-background-color);
 }
@@ -44,7 +48,7 @@ body {
 
 @media (hover: hover) {
     .page__link:hover {
-        color: var(--hover-link-color);
+        color: inherit;
     }
 }
 
