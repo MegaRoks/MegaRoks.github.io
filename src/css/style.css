@@ -4,12 +4,14 @@ html {
 
 body {
     overflow: hidden;
+    background-color: var(--primary-background-color);
 }
 
 .content {
+    position: fixed;
+    inset: 0;
     display: grid;
     grid-auto-rows: minmax(100%, auto);
-    height: 100dvh;
     overflow-y: scroll;
     overscroll-behavior-y: contain;
     scroll-snap-type: y mandatory;
