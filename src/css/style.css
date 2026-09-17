@@ -14,10 +14,18 @@ body {
     grid-auto-rows: minmax(100%, auto);
     overflow-y: scroll;
     overscroll-behavior-y: contain;
+    scroll-behavior: smooth;
     scroll-snap-type: y mandatory;
 }
 
+@media (prefers-reduced-motion: reduce) {
+    .content {
+        scroll-behavior: auto;
+    }
+}
+
 .page {
+    position: relative;
     display: grid;
     place-items: center;
     align-content: center;
@@ -39,6 +47,55 @@ body {
 
     color: var(--secondary-color);
     background-color: var(--secondary-background-color);
+}
+
+.page:has(> .page__hint--up) {
+    padding-top: calc(var(--main-padding) / 2 + 4rem);
+}
+
+.page:has(> .page__hint--down) {
+    padding-bottom: calc(var(--main-padding) / 2 + 4rem);
+}
+
+.page__hint {
+    position: absolute;
+    left: 50%;
+    display: grid;
+    place-items: center;
+    padding: 0.75rem;
+    color: var(--link-color);
+    translate: -50% 0;
+}
+
+.page__hint--up {
+    top: calc(var(--main-padding) / 2);
+    rotate: 180deg;
+}
+
+.page__hint--down {
+    bottom: calc(var(--main-padding) / 2);
+}
+
+.page__hint-icon {
+    width: clamp(1.5rem, 1rem + 1.5vw, 3rem);
+    height: auto;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .page__hint-icon {
+        animation: hint-bob 2.4s ease-in-out infinite;
+    }
+}
+
+@keyframes hint-bob {
+    0%,
+    100% {
+        translate: 0 -15%;
+    }
+
+    50% {
+        translate: 0 15%;
+    }
 }
 
 .page__link {
