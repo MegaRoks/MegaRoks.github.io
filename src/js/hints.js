@@ -1,11 +1,14 @@
 /**
  * Navigation for the chevrons between sections.
  *
- * They stay plain anchors so the page works with no JavaScript, but a plain
- * anchor pushes a history entry on every click, which turns the back button
- * into a way of walking back up the page rather than leaving it. Handling the
- * click here scrolls to the same place and replaces the current entry instead,
- * so the address still names the section and the history stays as it was.
+ * They stay plain anchors so the page works with no JavaScript, but following
+ * one writes its fragment into the address bar and pushes a history entry,
+ * which leaves the visitor with a URL they did not ask for and a back button
+ * that walks back up the page rather than leaving it. Handling the click here
+ * scrolls to the same section and touches neither.
+ *
+ * A fragment typed or pasted by hand still works: the browser resolves it on
+ * load without going through any of this.
  */
 
 /**
@@ -25,14 +28,14 @@ function isBrowserClick(event) {
 }
 
 /**
- * Takes over the chevrons so they scroll without growing the history.
+ * Takes over the chevrons so they scroll without changing the address.
  *
  * @param {Element[]} hints - The chevron anchors.
  * @returns {{ destroy: () => void }} Handle that detaches the listeners.
  */
 export function createHintNavigation(hints) {
     /**
-     * Click handler.
+     * Click handler. Scrolls without recording anything.
      *
      * @param {MouseEvent} event - The click event.
      * @returns {void}
@@ -52,7 +55,6 @@ export function createHintNavigation(hints) {
         event.preventDefault();
 
         target.scrollIntoView({ block: 'start' });
-        history.replaceState(null, '', hash);
     }
 
     hints.forEach((hint) => hint.addEventListener('click', handleClick));
